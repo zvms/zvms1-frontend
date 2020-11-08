@@ -93,9 +93,6 @@
 }
 </style>
 <script>
-import dialogs from "./utils/dialogs";
-import axios from "axios";
-
 export default {
   name: "App",
   data: () => ({

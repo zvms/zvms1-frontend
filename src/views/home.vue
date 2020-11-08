@@ -9,7 +9,6 @@
 
 <script>
 import axios from 'axios'
-import dialogs from '../utils/dialogs'
 
 export default {
   name: "home",
@@ -22,20 +21,12 @@ export default {
     },
 
     init() {
-      this.$store.commit("loading", true);
-      axios
-        .get("/config/theme.json")
-        .then((response) => {
-          this.$vuetify.theme.themes = response.data;
-        })
-        .catch((error) => {
-          dialogs.toasts.error(error);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-          axios.defaults.baseURL = "/api";
-          this.$router.push("/login");
-        });
+      this.$vuetify.theme.themes = {
+        "light":{"primary":"F48FB1"},
+        "dark":{"primary":"#424242"}
+      };
+      axios.defaults.baseURL = "http://localhost:5000";
+      this.$router.push("/login");
     },
   },
 };
