@@ -32,7 +32,7 @@
 						<v-icon class="elevation-6">mdi-account-circle</v-icon>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title>{{thought.userName}}</v-list-item-title>
+						<v-list-item-title>{{thought.stuName}}</v-list-item-title>
 					</v-list-item-content>
 					<v-tooltip left max-width="300">
 						<template v-slot:activator="{ on, attrs }">
@@ -55,8 +55,8 @@
 		name: "me",
 		data: () => ({
 			thought: {
-				userName: undefined,
-				userId: undefined,
+				stuName: undefined,
+				stuId: undefined,
 				content: undefined
 			}
 		}),
@@ -70,8 +70,8 @@
 					.post("/volunteer/randomThought")
 					.then((response) => {
 						if (response.data.type == "SUCCESS") {
-							this.thought.userName = response.data.userName;
-							this.thought.userId = response.data.userId;
+							this.thought.stuName = response.data.stuName;
+							this.thought.stuId = response.data.stuId;
 							this.thought.content = response.data.content;
 						} else if (response.data.type == "ERROR") {
 							dialogs.toasts.error(response.data.message);
