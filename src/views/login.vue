@@ -71,6 +71,7 @@ export default {
           .post("/user/login", {"userid":this.form.userid,"password":md5(this.form.password)})
           .then((response) => {
             //对传回数据进行处理
+            console.log(response.data)
             if (response.data.type == "SUCCESS") {
               dialogs.toasts.success(response.data.message);
               //将一切保存到$store
@@ -81,6 +82,8 @@ export default {
                 class: response.data.class,
                 classname: response.data.classname,
               });
+              //设置token
+              this.$store.commit("token", response.data.token);
               this.$router.push("/me");
               //更新抽屉导航栏
               this.drawers = [

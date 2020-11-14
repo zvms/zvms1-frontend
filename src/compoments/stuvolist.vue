@@ -43,7 +43,7 @@ import volinfo from "./volinfo.vue";
 import axios from "axios";
 
 export default {
-  name: "uservolist",
+  name: "stuvolist",
   props: ["userid", "title"],
   components: {
     volinfo,
@@ -71,7 +71,7 @@ export default {
       if (this.userid != 0 && this.userid != undefined) {
         this.$store.commit("loading", true);
         axios
-          .post("/user/volbook/" + this.userid)
+          .post("/student/volbook/" + this.userid, {"token": this.$store.state.token})
           .then((response) => {
             if (response.data.type == "ERROR")
               dialogs.toasts.error(response.data.message);

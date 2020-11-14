@@ -9,6 +9,7 @@ export default new Vuex.Store({
     state: {
         isLogined: false,
         isLoading: false,
+        token: undefined,
         info: {
             username: undefined,
             permission: undefined,
@@ -33,6 +34,9 @@ export default new Vuex.Store({
         },
         draweritems: (state, payload) => {
             state.draweritems = payload
+        },
+        token: (state, payload) => {
+            state.token = payload
         }
     },
     //plugins: [createPersistedState()]

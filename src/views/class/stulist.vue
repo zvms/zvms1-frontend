@@ -51,7 +51,7 @@
       ></v-data-table>
       <v-dialog v-model="dialog">
         <v-card>
-          <uservolist :userid="rowUserId" :title="rowUserName" />
+          <stuvolist :userid="rowUserId" :title="rowUserName" />
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialog = false"
@@ -68,7 +68,7 @@
 import axios from "axios";
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions.js";
-import uservolist from "../../compoments/uservolist";
+import stuvolist from "../../compoments/stuvolist";
 
 export default {
   data: () => ({
@@ -92,7 +92,7 @@ export default {
     ],
   }),
   components: {
-    uservolist,
+    stuvolist,
   },
   mounted: function () {
     this.pageload();
@@ -101,7 +101,7 @@ export default {
     pageload() {
       this.$store.commit("loading", true);
       axios
-        .post("/class/list")
+        .post("/class/list", {"token": this.$store.state.token})
         .then((response) => {
           if (response.data.type == "ERROR"){
             dialogs.toasts.error(response.data.message);
@@ -138,7 +138,7 @@ export default {
       this.$store.commit("loading", true);
       this.students = undefined;
       axios
-        .post("/class/stulist/" + this.nowclass)
+        .post("/class/stulist/" + this.nowclass, {"token": this.$store.state.token})
         .then((response) => {
           if (response.data.type == "ERROR")
             dialogs.toasts.error(response.data.message);
