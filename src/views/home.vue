@@ -25,7 +25,7 @@ export default {
         "light":{"primary":"F48FB1"},
         "dark":{"primary":"#424242"}
       };
-      axios.defaults.baseURL = "http://localhost:5000";
+      axios.defaults.baseURL = "101.200.126.111:5000";
       this.$router.push("/login");
     },
   },
