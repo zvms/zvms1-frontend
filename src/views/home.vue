@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: "home",
   mounted: function () {
@@ -17,17 +15,8 @@ export default {
   },
   methods: {
     pageload: function(){
-      this.init()
-    },
-
-    init() {
-      this.$vuetify.theme.themes = {
-        "light":{"primary":"F48FB1"},
-        "dark":{"primary":"#424242"}
-      };
-      axios.defaults.baseURL = "101.200.126.111:5000";
-      this.$router.push("/login");
-    },
+      this.$router.push("/me");
+    }
   },
 };
 </script>

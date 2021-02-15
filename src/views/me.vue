@@ -67,7 +67,7 @@
 			randomThought: function() {
 				this.$store.commit("loading", true);
 				axios
-					.post("/volunteer/randomThought")
+					.get("/volunteer/randomThought")
 					.then((response) => {
 						if (response.data.type == "SUCCESS") {
 							this.thought.stuName = response.data.stuName;
@@ -99,3 +99,9 @@
 		},
 	};
 </script>
+
+<style scoped>
+.v-card {
+  margin: 1rem;
+}
+</style>

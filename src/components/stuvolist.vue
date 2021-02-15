@@ -25,7 +25,7 @@
       >
       </v-data-table>
     </v-card-text>
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" max-width="80%">
       <v-card>
         <volinfo :volid="volid" />
         <v-card-actions>
@@ -71,7 +71,7 @@ export default {
       if (this.userid != 0 && this.userid != undefined) {
         this.$store.commit("loading", true);
         axios
-          .post("/student/volbook/" + this.userid, {"token": this.$store.state.token})
+          .get("/student/volbook/" + this.userid)
           .then((response) => {
             if (response.data.type == "ERROR")
               dialogs.toasts.error(response.data.message);

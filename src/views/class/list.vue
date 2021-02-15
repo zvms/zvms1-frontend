@@ -49,7 +49,7 @@ export default {
     pageload() {
       this.$store.commit("loading", true);
       axios
-        .post("/class/list", {"token": this.$store.state.token})
+        .get("/class/list")
         .then((response) => {
           if (response.data.type == "ERROR")
             dialogs.toasts.error(response.data.message);

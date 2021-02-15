@@ -49,7 +49,7 @@
         no-data-text="没有数据哦"
         no-results-text="没有结果"
       ></v-data-table>
-      <v-dialog v-model="dialog">
+      <v-dialog v-model="dialog" max-width="80%">
         <v-card>
           <stuvolist :userid="rowUserId" :title="rowUserName" />
           <v-card-actions>
@@ -68,7 +68,7 @@
 import axios from "axios";
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions.js";
-import stuvolist from "../../compoments/stuvolist";
+import stuvolist from "../../components/stuvolist";
 
 export default {
   data: () => ({
@@ -101,7 +101,7 @@ export default {
     pageload() {
       this.$store.commit("loading", true);
       axios
-        .post("/class/list", {"token": this.$store.state.token})
+        .get("/class/list")
         .then((response) => {
           if (response.data.type == "ERROR"){
             dialogs.toasts.error(response.data.message);
@@ -138,7 +138,7 @@ export default {
       this.$store.commit("loading", true);
       this.students = undefined;
       axios
-        .post("/class/stulist/" + this.nowclass, {"token": this.$store.state.token})
+        .get("/class/stulist/" + this.nowclass)
         .then((response) => {
           if (response.data.type == "ERROR")
             dialogs.toasts.error(response.data.message);
