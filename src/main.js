@@ -25,7 +25,7 @@ axios.interceptors.request.use(
 			...config.params,
 			timestamp: Date.now()
 		};
-		config.headers.Authorize = localStorage.getItem('token') || '';
+		config.headers.Authorization = localStorage.getItem('token') || '';
 		return config
 	},
 	error => Promise.reject(error)
