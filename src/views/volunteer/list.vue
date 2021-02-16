@@ -30,6 +30,15 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <v-dialog v-model="dialog" max-width="80%">
+      <v-card>
+        <volinfo :volid="volid" />
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="dialog = false">关闭</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -37,12 +46,18 @@
 import axios from "axios";
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions";
+import volinfo from "../../components/volinfo";
 
 export default {
   data: () => ({
     volworks: [],
+    dialog: false,
+    volid: 0,
     onlyDisplayCurrentClass: true,
   }),
+  components: {
+    volinfo,
+  },
   mounted: function () {
     this.pageload();
   },
@@ -58,17 +73,16 @@ export default {
       console.log("SignUp: " + volid);
     },
     volDetail: function (volid) {
-      //TODO 义工详情
       console.log("Detail:" + volid);
+      this.volid = volid;
+      this.dialog = true;
     },
-    switchDisplay: function(){
-      if(this.onlyDisplayCurrentClass)
-        this.fetchCurrentClassVol();
-      else
-        this.fetchAllVol()
+    switchDisplay: function () {
+      if (this.onlyDisplayCurrentClass) this.fetchCurrentClassVol();
+      else this.fetchAllVol();
     },
-    fetchCurrentClassVol: function(){
-      console.log('fetchCurrentClassVol');
+    fetchCurrentClassVol: function () {
+      console.log("fetchCurrentClassVol");
       this.$store.commit("loading", true);
       axios
         .get("/class/volunteer/" + this.$store.state.info.class)

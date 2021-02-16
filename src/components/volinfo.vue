@@ -1,31 +1,58 @@
 <template>
-  <v-card flat>
+  <v-card flat :loading="$store.state.isLoading">
     <v-card-title>
-      {{vol.name}}
+      {{ vol.name }}
     </v-card-title>
     <v-simple-table dense>
       <tbody>
-        <tr><td>简介</td><td>{{vol.description}}</td></tr>
-        <tr><td>日期</td><td>{{vol.date}}</td></tr>
-        <tr><td>时间</td><td>{{vol.time}}</td></tr>
-        <tr><td>校内时长</td><td>{{vol.inside}}</td></tr>
-        <tr><td>校外时长</td><td>{{vol.outside}}</td></tr>
-        <tr><td>大型时长</td><td>{{vol.large}}</td></tr>
-        <tr><td>人数</td><td>{{vol.stuMax}}</td></tr>
-        <tr><td>已报名</td><td>{{vol.stuNow}}</td></tr>
-        <tr><td>状态</td><td>{{vol.status}}</td></tr>
+        <tr>
+          <td>简介</td>
+          <td>{{ vol.description }}</td>
+        </tr>
+        <tr>
+          <td>日期</td>
+          <td>{{ vol.date }}</td>
+        </tr>
+        <tr>
+          <td>时间</td>
+          <td>{{ vol.time }}</td>
+        </tr>
+        <tr>
+          <td>校内时长</td>
+          <td>{{ vol.inside }}</td>
+        </tr>
+        <tr>
+          <td>校外时长</td>
+          <td>{{ vol.outside }}</td>
+        </tr>
+        <tr>
+          <td>大型时长</td>
+          <td>{{ vol.large }}</td>
+        </tr>
+        <tr>
+          <td>人数</td>
+          <td>{{ vol.stuMax }}</td>
+        </tr>
+        <tr>
+          <td>已报名</td>
+          <td>{{ vol.stuNow }}</td>
+        </tr>
+        <tr>
+          <td>状态</td>
+          <td>{{ vol.status }}</td>
+        </tr>
       </tbody>
     </v-simple-table>
   </v-card>
 </template>
 
 <script>
-import dialogs from '../utils/dialogs';
-import axios from "axios"
+import dialogs from "../utils/dialogs";
+import axios from "axios";
 
 export default {
-  name: 'volinfo',
-  props: ['volid'],
+  name: "volinfo",
+  props: ["volid"],
   data: () => ({
     vol: {
       type: undefined,
@@ -39,19 +66,20 @@ export default {
       status: undefined,
       inside: undefined,
       outside: undefined,
-      large: undefined
-    }
+      large: undefined,
+    },
   }),
-  created: function(){
+  created: function () {
     this.init();
   },
   methods: {
-    init: function() {
-      if(this.volid != 0 && this.volid != undefined){
+    init: function () {
+      if (this.volid != 0 && this.volid != undefined) {
         this.$store.commit("loading", true);
         axios
-          .get("/volunteer/fetch/"+this.volid)
+          .get("/volunteer/fetch/" + this.volid)
           .then((response) => {
+            console.log(response.data);
             if (response.data.type == "ERROR")
               dialogs.toasts.error(response.data.message);
             else if (response.data.type == "SUCCESS") {
@@ -64,30 +92,30 @@ export default {
           .finally(() => {
             this.$store.commit("loading", false);
           });
-        }
+      }
     },
-    fetch: function(){
+    fetch: function () {
       this.vol = {
-      type: undefined,
-      message: undefined,
-      name: "加载中...",
-      date: undefined,
-      time: undefined,
-      stuMax: undefined,
-      stuNow: undefined,
-      description: undefined,
-      status: undefined,
-      inside: undefined,
-      outside: undefined,
-      large: undefined
-    }
-    this.init();
-    }
+        type: undefined,
+        message: undefined,
+        name: "加载中...",
+        date: undefined,
+        time: undefined,
+        stuMax: undefined,
+        stuNow: undefined,
+        description: undefined,
+        status: undefined,
+        inside: undefined,
+        outside: undefined,
+        large: undefined,
+      };
+      this.init();
+    },
   },
   watch: {
-    volid: function(){
+    volid: function () {
       this.fetch();
-    }
-  }
-}
+    },
+  },
+};
 </script>
