@@ -113,6 +113,15 @@ export default {
                 });
               }
 
+              //看看是否加上创建义工
+              if (response.data.permission >= permissions.teacher) {
+                this.drawers.push({
+                  title: "创建义工",
+                  to: "/volunteer/create",
+                  icon: "mdi-view-list",
+                });
+              }
+
               this.drawers.push({
                 title: "登出",
                 to: "/logout",

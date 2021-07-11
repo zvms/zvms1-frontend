@@ -40,6 +40,11 @@ export default new Router({
 			path: '/volunteer/list',
 			name: 'volunteerList',
 			component: () => import('../views/volunteer/list.vue')
+		},
+		{
+			path: '/volunteer/create',
+			name: 'volunteerCreate',
+			component: () => import('../views/volunteer/create.vue')
 		}
 	]
 })
