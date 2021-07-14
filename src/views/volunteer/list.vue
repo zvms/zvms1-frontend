@@ -9,6 +9,7 @@
           label="仅显示本班"
           @click="switchDisplay()"
           v-model="onlyDisplayCurrentClass"
+          v-show="!granted()"
           dense
         ></v-switch>
       </v-card-title>
@@ -43,10 +44,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions";
 import volinfo from "../../components/volinfo";
+import zutils from "../../utils/zutils.js";
 
 export default {
   data: () => ({
@@ -81,42 +82,27 @@ export default {
       if (this.onlyDisplayCurrentClass) this.fetchCurrentClassVol();
       else this.fetchAllVol();
     },
-    fetchCurrentClassVol: function () {
-      console.log("fetchCurrentClassVol");
+    async fetchCurrentClassVol() {
       this.$store.commit("loading", true);
-      axios
-        .get("/class/volunteer/" + this.$store.state.info.class)
-        .then((response) => {
-          if (response.data.type == "ERROR")
-            dialogs.toasts.error(response.data.message);
-          else if (response.data.type == "SUCCESS") {
-            this.volworks = response.data.volunteer;
-          } else dialogs.toasts.error("未知错误");
-        })
-        .catch((error) => {
-          dialogs.toasts.error(error);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
+      await zutils.fetchClassVolunter(
+        this.$store.state.info.class,
+        (volworks) => {
+          volworks
+            ? (this.volworks = volworks)
+            : dialogs.toasts.error("获取义工列表失败");
+        }
+      );
+      this.$store.commit("loading", false);
     },
-    fetchAllVol: function () {
+    
+    async fetchAllVol() {
       this.$store.commit("loading", true);
-      axios
-        .get("/volunteer/list")
-        .then((response) => {
-          if (response.data.type == "ERROR")
-            dialogs.toasts.error(response.data.message);
-          else if (response.data.type == "SUCCESS") {
-            this.volworks = response.data.volunteer;
-          } else dialogs.toasts.error("未知错误");
-        })
-        .catch((error) => {
-          dialogs.toasts.error(error);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
+      await zutils.fetchAllVolunter((volworks) => {
+        volworks
+          ? (this.volworks = volworks)
+          : dialogs.toasts.error("获取义工列表失败");
+      });
+      this.$store.commit("loading", false);
     },
   },
 };

@@ -136,9 +136,7 @@ export default {
       this.$store.commit("loading", true);
       this.students = undefined;
       await zutils.fetchStudentList(this.nowclass, (stus) => {
-        stus
-          ? (this.students = stus)
-          : this.students=undefined
+        stus ? (this.students = stus) : (this.students = undefined);
       });
       this.$store.commit("loading", false);
     },

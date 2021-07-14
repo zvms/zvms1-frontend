@@ -16,6 +16,7 @@ export default {
         await Axios
             .get("/class/stulist/" + classid)
             .then((response) => {
+                console.log(response.data)
                 let stus = response.data.student
                 if (stus)
                     for (var i = 0; i < stus.length; i++) {
@@ -24,7 +25,7 @@ export default {
                         var large = stus[i]["large"];
                         var result = true;
                         if (outside < 20) {
-                            this.inside = inside - (20 - outside) * 2;
+                            inside = inside - (20 - outside) * 2;
                             outside = 20;
                         }
                         if (large < 16 || inside < 20 || outside < 20 || inside + outside < 44) {
@@ -38,4 +39,23 @@ export default {
                 console.error(err)
             })
     },
+
+    fetchClassVolunter: async (classid, callback) => {
+        let url = classid ? "/class/volunteer" : "/class/volunteer/" + classid;
+        await Axios
+            .get(url).then((response) => {
+                console.log(response.data);
+                callback(response.data.volunteer);
+            })
+            .catch((err) => { console.error(err) })
+    },
+
+    fetchAllVolunter: async (callback) => {
+        await Axios
+            .get("/class/volunteer").then((response) => {
+                console.log(response.data);
+                callback(response.data.volunteer);
+            })
+            .catch((err) => { console.error(err) })
+    }
 }
