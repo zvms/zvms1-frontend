@@ -1,7 +1,7 @@
 <template style="overflow-y: hidden;" id="win">
   <v-app
     style="
-      background: url(https://api.dongmanxingkong.com/suijitupian/acg/1080p/index.php);
+      background: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fphoto.tuchong.com%2F16667757%2Ff%2F1152125355.jpg&refer=http%3A%2F%2Fphoto.tuchong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631932457&t=5662d318816fc73507d495f273b42ad5);
       background-size: cover;
       background-attachment: fixed;
       overflow-y: hidden;
@@ -23,7 +23,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>义工管理系统</v-list-item-title>
-            <v-list-item-subtitle>内测版</v-list-item-subtitle>
+            <v-list-item-subtitle>内测</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -73,7 +73,7 @@
       color="rgba(255,255,255,0.3)"
     >
       <v-col class="text-center" cols="12"
-        >{{ new Date().getFullYear() }} - ©mo_yi</v-col
+        >{{ new Date().getFullYear() }} - © mo_yi &amp; Zecyel &amp; fpc7519</v-col
       >
     </v-footer>
   </v-app>
