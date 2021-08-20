@@ -10,15 +10,79 @@
             label="义工名称"
             prepend-icon="mdi-pen"
           />
-          <v-select
-            prepend-icon="mdi-switch"
-            v-model="form.class"
-            label="限定班级"
+          <v-text-field
+            v-model="form.stuMax"
             :rules="rules"
-            :items="classes"
-            item-text="name"
-            item-value="id"
-          ></v-select>
+            label="义工总人数"
+            prepend-icon="mdi-account"
+          />
+          <!---->
+          <v-simple-table>
+            <thead>
+              <td>班级</td>
+              <td>最多报名人数</td>
+              <td>删除</td>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(cls, i) in classSelected"
+                :key = "i"
+              >
+                <td>{{cls.id}}</td>
+                <td>{{cls.stuMax}}</td>
+                <td>
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="primary"
+                    @click="delFromList(i)"
+                  >
+                    <v-icon dark>
+                      mdi-minus
+                    </v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <v-select
+                    prepend-icon="mdi-switch"
+                    v-model="class_new"
+                    label="限定班级"
+                    :rules="rules"
+                    :items="classes"
+                    item-text="name"
+                    item-value="id"
+                  >
+                  </v-select>
+                </td>
+                <td>
+                  <v-text-field
+                    v-model.number = "count_new"
+                    v-label = "限制人数"
+                  >
+                  </v-text-field>
+                </td>
+                <td>
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="primary"
+                    @click= "addToList"
+                  >
+                    <v-icon dark>
+                      mdi-plus
+                    </v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+          <!---->
           <v-dialog
             ref="dateDialog"
             v-model="modalDate"
@@ -84,12 +148,6 @@
             </v-time-picker>
           </v-dialog>
           <v-text-field
-            v-model="form.stuMax"
-            :rules="rules"
-            label="义工人数"
-            prepend-icon="mdi-account"
-          />
-          <v-text-field
             v-model="form.description"
             :rules="rules"
             label="义工描述"
@@ -137,6 +195,12 @@ import { NOTEMPTY } from "../..//utils/validation.js";
 
 export default {
   data: () => ({
+    classSelected: [
+      {"id": "234234", "stuMax": 5},
+      {"id": "safsdd", "stuMax": 10}
+    ],
+    count_new: undefined,
+    class_new: undefined,
     classes: undefined,
     modalDate: false,
     modalTime: false,
@@ -181,7 +245,7 @@ export default {
             inside: this.form.inside,
             outside: this.form.outside,
             large: this.form.large,
-            class: this.form.class,
+            class: this.form.classSelected,
           })
           .then((response) => {
             console.log(response.data);
@@ -199,9 +263,25 @@ export default {
           .finally(() => {
             this.$store.commit("loading", false);
           });
+        }
+      },
+      addToList: function (){
+        let flg = false;
+        if (this.class_new == "") flg = true;
+        for (let i in this.classSelected)
+          if (i["id"] == this.class_new){
+            flg = true;
+            break;
+          }
+        if (!flg)
+          this.classSelected.push({"id": this.class_new, "stuMax": this.count_new});
+        this.class_new = "";
+        this.count_new = 0;
+      },
+      delFromList: function(i){
+        this.classSelected.splice(i, 1);
       }
     },
-  },
 };
 </script>
 
