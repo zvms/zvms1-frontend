@@ -141,11 +141,15 @@ export default {
       //TODO 报名义工
       console.log("SignUp: " + volid);
       this.dialog1 = true;
+
+      this.stulst = undefined;
+      await zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
+        stus ? (this.stulst = stus) : (this.stulst = undefined);
+      });
       
     },
     signupVolunteer: function(volid){
-      // TODO
-      axios
+      await axios
         .post("/volunteer/signup/"+volid,{
           "stulst": this.stulstSelected
         })
@@ -165,6 +169,7 @@ export default {
         .finally(() => {
           this.$store.commit("loading", false);
         });
+        dialog1 = false;
     },
     volDetail: function (volid) {
       console.log("Detail:" + volid);
