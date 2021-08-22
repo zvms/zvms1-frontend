@@ -41,7 +41,7 @@ export default {
     },
 
     fetchClassVolunter: async (classid, callback) => {
-        let url = classid ? "/class/volunteer" : "/class/volunteer/" + classid;
+        let url = classid ? "/class/volunteer/"+classid : "/volunteer/list/";
         await Axios
             .get(url).then((response) => {
                 console.log(response.data);

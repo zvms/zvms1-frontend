@@ -51,7 +51,6 @@
                     prepend-icon="mdi-switch"
                     v-model="class_new"
                     label="限定班级"
-                    :rules="rules"
                     :items="classes"
                     item-text="name"
                     item-value="id"
@@ -195,10 +194,7 @@ import { NOTEMPTY } from "../..//utils/validation.js";
 
 export default {
   data: () => ({
-    classSelected: [
-      {"id": "234234", "stuMax": 5},
-      {"id": "safsdd", "stuMax": 10}
-    ],
+    classSelected: [],
     count_new: undefined,
     class_new: undefined,
     classes: undefined,
@@ -231,7 +227,8 @@ export default {
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
-      if (this.$refs.form.validate()) {
+      // if (this.$refs.form.validate()) {
+      if (true){
         console.log("创建义工");
         console.log(this.form);
         this.$store.commit("loading", true);
@@ -240,12 +237,12 @@ export default {
             name: this.form.name,
             date: this.form.date,
             time: this.form.time,
-            stuMax: this.form.stuMax,
+            stuMax: parseInt(this.form.stuMax),
             description: this.form.description,
-            inside: this.form.inside,
-            outside: this.form.outside,
-            large: this.form.large,
-            class: this.form.classSelected,
+            inside: parseInt(this.form.inside),
+            outside: parseInt(this.form.outside),
+            large: parseInt(this.form.large),
+            class: this.classSelected,
           })
           .then((response) => {
             console.log(response.data);
@@ -274,7 +271,7 @@ export default {
             break;
           }
         if (!flg)
-          this.classSelected.push({"id": this.class_new, "stuMax": this.count_new});
+          this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
         this.class_new = "";
         this.count_new = 0;
       },

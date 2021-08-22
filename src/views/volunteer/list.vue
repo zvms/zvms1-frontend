@@ -40,6 +40,70 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog1" max-width="80%">
+      <v-card>
+        <v-simple-table>
+          <thead>
+            <td>学号</td>
+            <td>删除</td>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(stuid, i) in stulstSelected"
+              :key = "i"
+            >
+              <td>{{stuid}}</td>
+              <td>
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  x-small
+                  color="primary"
+                  @click="delFromList(i)"
+                >
+                  <v-icon dark>
+                    mdi-minus
+                  </v-icon>
+                </v-btn>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <v-select
+                  prepend-icon="mdi-switch"
+                  v-model="class_new"
+                  label="选定学生"
+                  :items="stulst"
+                  item-text="name"
+                  item-value="id"
+                >
+                </v-select>
+              </td>
+              <td>
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  x-small
+                  color="primary"
+                  @click= "addToList"
+                >
+                  <v-icon dark>
+                    mdi-plus
+                  </v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="signupVolunteer(vol.id)">确定</v-btn>
+          <v-btn color="red darken-1" text @click="dialog1 = false">关闭</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -48,13 +112,17 @@ import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions";
 import volinfo from "../../components/volinfo";
 import zutils from "../../utils/zutils.js";
+import axios from "axios";
 
 export default {
   data: () => ({
     volworks: [],
     dialog: false,
+    dialog1: false,
     volid: 0,
     onlyDisplayCurrentClass: true,
+    stulst: [],
+    stulstSelected: []
   }),
   components: {
     volinfo,
@@ -72,6 +140,31 @@ export default {
     volSignUp: function (volid) {
       //TODO 报名义工
       console.log("SignUp: " + volid);
+      this.dialog1 = true;
+      
+    },
+    signupVolunteer: function(volid){
+      // TODO
+      axios
+        .post("/volunteer/signup/"+volid,{
+          "stulst": this.stulstSelected
+        })
+        .then((response) => {
+            console.log(response.data);
+            if (response.data.type == "SUCCESS") {
+              dialogs.toasts.success(response.data.message);
+              for(let k in this.form)
+                this.form[k] = undefined
+            } else {
+              dialogs.toasts.error(response.data.message);
+            }
+        })
+        .catch((err) => {
+          dialogs.toasts.error(err);
+        })
+        .finally(() => {
+          this.$store.commit("loading", false);
+        });
     },
     volDetail: function (volid) {
       console.log("Detail:" + volid);

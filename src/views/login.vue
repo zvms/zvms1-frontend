@@ -106,12 +106,12 @@ export default {
                   icon: "mdi-view-list",
                 });
                 
-                this.drawers.push({
-                  title: "义工列表",
-                  to: "/volunteer/list",
-                  icon: "mdi-view-list",
-                });
               }
+              this.drawers.push({
+                title: "义工列表",
+                to: "/volunteer/list",
+                icon: "mdi-view-list",
+              });
 
               //看看是否加上创建义工
               if (response.data.permission >= permissions.teacher) {
