@@ -88,6 +88,7 @@ export default {
               //更新抽屉导航栏
               this.drawers = [
                 { title: "我的", to: "/me", icon: "mdi-account-circle" },
+                { title: "修改密码", to: "/modifyPwd", icon: "mdi-account-circle"}
               ];
 
               //看看是否加上班级列表

@@ -42,7 +42,7 @@
     </v-dialog>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
-        <v-simple-table>
+        <v-simple-table style="margin:20px;">
           <thead>
             <td>学号</td>
             <td>删除</td>
@@ -72,7 +72,7 @@
               <td>
                 <v-select
                   prepend-icon="mdi-switch"
-                  v-model="class_new"
+                  v-model="stu_new"
                   label="选定学生"
                   :items="stulst"
                   item-text="name"
@@ -99,7 +99,7 @@
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="signupVolunteer(vol.id)">确定</v-btn>
+          <v-btn color="red darken-1" text @click="signupVolunteer(volid)">确定</v-btn>
           <v-btn color="red darken-1" text @click="dialog1 = false">关闭</v-btn>
         </v-card-actions>
       </v-card>
@@ -119,10 +119,11 @@ export default {
     volworks: [],
     dialog: false,
     dialog1: false,
-    volid: 0,
+    volid: undefined,
     onlyDisplayCurrentClass: true,
     stulst: [],
-    stulstSelected: []
+    stulstSelected: [],
+    stu_new: undefined
   }),
   components: {
     volinfo,
@@ -143,13 +144,16 @@ export default {
       this.dialog1 = true;
 
       this.stulst = undefined;
-      await zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
+      zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
         stus ? (this.stulst = stus) : (this.stulst = undefined);
       });
-      
+      this.volid = volid;
     },
     signupVolunteer: function(volid){
-      await axios
+      console.log("/volunteer/signup/"+volid,{
+          "stulst": this.stulstSelected
+        });
+      axios
         .post("/volunteer/signup/"+volid,{
           "stulst": this.stulstSelected
         })
@@ -169,7 +173,7 @@ export default {
         .finally(() => {
           this.$store.commit("loading", false);
         });
-        dialog1 = false;
+        this.dialog1 = false;
     },
     volDetail: function (volid) {
       console.log("Detail:" + volid);
@@ -202,6 +206,29 @@ export default {
       });
       this.$store.commit("loading", false);
     },
+    
+    addToList: function (){
+      console.log("Ent");
+      console.log(this.stu_new);
+      console.log(this.stulstSelected);
+      let flg = false;
+      if (this.stu_new == "" || this.stu_new == undefined) flg = true;
+      for (let i in this.stulstSelected){
+        console.log("aaaaaaaaaaaaaa", i);
+        if (this.stulstSelected[i] == this.stu_new){
+          flg = true;
+          break;
+        }
+      }
+      if (!flg)
+        this.stulstSelected.push(this.stu_new);
+      else
+        dialogs.toasts.error("请不要重复报名");
+      this.stu_new = "";
+    },
+    delFromList: function(i){
+      this.stulstSelected.splice(i, 1);
+    }
   },
 };
 </script>
