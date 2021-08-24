@@ -25,6 +25,10 @@
           <v-icon left>mdi-clipboard-text</v-icon>
           详情
         </v-btn>
+        <v-btn v-if="this.$store.state.info.permission > permissions.secretary" color="primary" @click="participants(vol.id)">
+          <v-icon left>mdi-clipboard-text</v-icon>
+          查看已报名
+        </v-btn>
         <v-btn color="primary" @click="volSignUp(vol.id)">
           <v-icon left>mdi-account-plus</v-icon>
           报名
@@ -37,6 +41,29 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="dialog = false">关闭</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog_participant" max-width="80%">
+      <v-card>
+		<v-card-title>报名列表</v-card-title>
+		<v-table>
+			<thead>
+				<td>学号</td>
+				<td>姓名</td>
+			</thead>
+			<tbody>
+				<tr
+					v-for="(stu, i) in participants"
+					:key = "i">
+					<td>{{stu.stuId}}</td>
+					<td>{{stu.stuName}}</td>
+				</tr>
+			</tbody>
+		</v-table>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="dialog_participant = false">关闭</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -104,6 +131,35 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+	<v-dialog v-model="submitThoughtDialog" max-width="80%">
+		<v-card>
+		<v-card-title>义工感想提交</v-card-title>
+		<v-card-text>
+			<v-form ref="form">
+			<v-select
+				prepend-icon="mdi-switch"
+				v-model="stu"
+				label="选定学生"
+				:items="stulst"
+				item-text="name"
+				item-value="id"
+			>
+			</v-select>
+			<v-textarea
+				v-model="thought"
+			>
+			</v-textarea>
+			</v-form>
+		</v-card-text>
+		<v-card-actions>
+			<v-spacer></v-spacer>
+			<v-btn color="primary" @click="submit(volid)">
+			<v-icon left>mdi-account-plus</v-icon>
+			提交
+			</v-btn>
+		</v-card-actions>
+		</v-card>
+	</v-dialog>
   </v-container>
 </template>
 
@@ -118,12 +174,15 @@ export default {
   data: () => ({
     volworks: [],
     dialog: false,
+	dialog_participant: false,
     dialog1: false,
+	submitThoughtDialog: false,
     volid: undefined,
     onlyDisplayCurrentClass: true,
     stulst: [],
     stulstSelected: [],
-    stu_new: undefined
+    stu_new: undefined,
+	participants: []
   }),
   components: {
     volinfo,
@@ -175,6 +234,26 @@ export default {
         });
         this.dialog1 = false;
     },
+	participants: function (volid){
+	  this.dialog_participant = true;
+	  axios
+		.get("/volunteer/signerList/"+volid, {})
+        .then((response) => {
+            console.log(response.data);
+            if (response.data.type == "SUCCESS") {
+              dialogs.toasts.success(response.data.message);
+			  this.participants = response.data.result;
+            } else {
+              dialogs.toasts.error(response.data.message);
+            }
+        })
+        .catch((err) => {
+          dialogs.toasts.error(err);
+        })
+        .finally(() => {
+          this.$store.commit("loading", false);
+        });
+	},
     volDetail: function (volid) {
       console.log("Detail:" + volid);
       this.volid = volid;
