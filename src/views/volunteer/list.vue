@@ -25,7 +25,7 @@
           <v-icon left>mdi-clipboard-text</v-icon>
           详情
         </v-btn>
-        <v-btn v-if="this.$store.state.info.permission > permissions.secretary" color="primary" @click="participants(vol.id)">
+        <v-btn color="primary" @click="participants(vol.id)">
           <v-icon left>mdi-clipboard-text</v-icon>
           查看已报名
         </v-btn>
@@ -46,21 +46,25 @@
     </v-dialog>
     <v-dialog v-model="dialog_participant" max-width="80%">
       <v-card>
-		<v-card-title>报名列表</v-card-title>
-		<v-table>
-			<thead>
-				<td>学号</td>
-				<td>姓名</td>
-			</thead>
-			<tbody>
-				<tr
-					v-for="(stu, i) in participants"
-					:key = "i">
-					<td>{{stu.stuId}}</td>
-					<td>{{stu.stuName}}</td>
-				</tr>
-			</tbody>
-		</v-table>
+		    <v-card-title>报名列表</v-card-title>
+        <v-card-text>
+		      <v-table>
+		      	<thead>
+		      		<td>学号</td>
+		      		<td>姓名</td>
+		      	</thead>
+		      	<tbody>
+		      		<tr
+		      			v-for="(stu, i) in participantsLst"
+		      			:key = "i"
+                @click:row="console.log(123)"
+              >
+		      			<td>{{stu.stuId}}</td>
+		      			<td>{{stu.stuName}}</td>
+		      		</tr>
+		      	</tbody>
+		      </v-table>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="dialog_participant = false">关闭</v-btn>
@@ -136,26 +140,28 @@
 		<v-card-title>义工感想提交</v-card-title>
 		<v-card-text>
 			<v-form ref="form">
-			<v-select
-				prepend-icon="mdi-switch"
-				v-model="stu"
-				label="选定学生"
-				:items="stulst"
-				item-text="name"
-				item-value="id"
-			>
-			</v-select>
 			<v-textarea
 				v-model="thought"
+        placeholder=""
 			>
 			</v-textarea>
 			</v-form>
 		</v-card-text>
 		<v-card-actions>
 			<v-spacer></v-spacer>
-			<v-btn color="primary" @click="submit(volid)">
-			<v-icon left>mdi-account-plus</v-icon>
-			提交
+			<v-btn
+        text
+        color="primary"
+        @click="submitThoughtDialog = false;submit(volid, stuid)"
+      >
+			  提交
+			</v-btn>
+			<v-btn
+        text
+        color="primary"
+        @click="submitThoughtDialog = false"
+      >
+			  取消
 			</v-btn>
 		</v-card-actions>
 		</v-card>
@@ -174,15 +180,17 @@ export default {
   data: () => ({
     volworks: [],
     dialog: false,
-	dialog_participant: false,
+	  dialog_participant: false,
     dialog1: false,
-	submitThoughtDialog: false,
+	  submitThoughtDialog: false,
     volid: undefined,
     onlyDisplayCurrentClass: true,
     stulst: [],
     stulstSelected: [],
     stu_new: undefined,
-	participants: []
+	  participantsLst: [],
+    stu: undefined,
+    thought: undefined
   }),
   components: {
     volinfo,
@@ -198,7 +206,6 @@ export default {
       return this.$store.state.info.permission < permissions.teacher;
     },
     volSignUp: function (volid) {
-      //TODO 报名义工
       console.log("SignUp: " + volid);
       this.dialog1 = true;
 
@@ -210,8 +217,8 @@ export default {
     },
     signupVolunteer: function(volid){
       console.log("/volunteer/signup/"+volid,{
-          "stulst": this.stulstSelected
-        });
+        "stulst": this.stulstSelected
+      });
       axios
         .post("/volunteer/signup/"+volid,{
           "stulst": this.stulstSelected
@@ -235,24 +242,26 @@ export default {
         this.dialog1 = false;
     },
 	participants: function (volid){
-	  this.dialog_participant = true;
-	  axios
-		.get("/volunteer/signerList/"+volid, {})
-        .then((response) => {
-            console.log(response.data);
-            if (response.data.type == "SUCCESS") {
-              dialogs.toasts.success(response.data.message);
-			  this.participants = response.data.result;
-            } else {
-              dialogs.toasts.error(response.data.message);
-            }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
+    this.dialog_participant = true;
+    axios
+      .get("/volunteer/signerList/"+volid, {
+
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.type == "SUCCESS") {
+          dialogs.toasts.success(response.data.message);
+          this.participantsLst = response.data.result;
+        } else {
+          dialogs.toasts.error(response.data.message);
+        }
+      })
+      .catch((err) => {
+        dialogs.toasts.error(err);
+      })
+      .finally(() => {
+        this.$store.commit("loading", false);
+      });
 	},
     volDetail: function (volid) {
       console.log("Detail:" + volid);
