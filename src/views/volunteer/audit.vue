@@ -2,90 +2,30 @@
   <v-container>
     <v-card color="primary" dark>
       <v-card-title>
-        义工列表
-        <v-spacer></v-spacer>
-        <v-switch
-          color="secondary"
-          label="仅显示本班"
-          @click="switchDisplay()"
-          v-model="onlyDisplayCurrentClass"
-          v-show="!granted()"
-          dense
-        ></v-switch>
+        未审核感想列表
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="搜索"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-card-title>
-    </v-card>
-    <v-card v-for="vol in volworks" v-bind:key="vol.id">
-      <v-card-title>{{ vol.name }}</v-card-title>
       <v-card-text>
-        {{ vol.description }}
+        <v-data-table
+          fixed-header
+          :headers="headers"
+          :items="thoughts"
+          :search="search"
+          :loading="$store.state.isLoading"
+          @click:row="rowClick"
+          loading-text="加载中..."
+          no-data-text="没有数据哦"
+          no-results-text="没有结果"
+        >
+        </v-data-table>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="volDetail(vol.id)">
-          <v-icon left>mdi-clipboard-text</v-icon>
-          详情
-        </v-btn>
-        <v-btn color="primary" @click="participants(vol.id)">
-          <v-icon left>mdi-clipboard-text</v-icon>
-          查看已报名
-        </v-btn>
-        <v-btn color="primary" @click="volSignUp(vol.id)">
-          <v-icon left>mdi-account-plus</v-icon>
-          报名
-        </v-btn>
-      </v-card-actions>
     </v-card>
-    <v-dialog v-model="dialog" max-width="80%">
-      <v-card>
-        <volinfo :volid="volid" />
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="dialog = false">关闭</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialog_participant" max-width="80%">
-      <v-card>
-		    <v-card-title>报名列表</v-card-title>
-        <v-card-text>
-          <v-data-table
-            fixed-header
-            :headers="headers"
-            :items="participantsLst"
-            :search="search"
-            :loading="$store.state.isLoading"
-            @click:row="rowClick"
-            loading-text="加载中..."
-            no-data-text="没有数据哦"
-            no-results-text="没有结果"
-          >
-          </v-data-table>
-        <!--
-		      <v-data-table
-            @click:row="console.log(123)"
-          >
-		      	<thead>
-		      		<td>学号</td>
-		      		<td>姓名</td>
-		      	</thead>
-		      	<tbody>
-		      		<tr
-		      			v-for="(stu, i) in participantsLst"
-		      			:key = "i"
-              >
-		      			<td>{{stu.stuId}}</td>
-		      			<td>{{stu.stuName}}</td>
-		      		</tr>
-		      	</tbody>
-		      </v-data-table>
-          -->
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="dialog_participant = false">关闭</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-simple-table style="margin:20px;">
@@ -150,37 +90,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-	<v-dialog v-model="submitThoughtDialog" max-width="80%">
-		<v-card>
-		<v-card-title>义工感想提交</v-card-title>
-		<v-card-text>
-			<v-form ref="form">
-			<v-textarea
-				v-model="thought"
-        placeholder=""
-			>
-			</v-textarea>
-			</v-form>
-		</v-card-text>
-		<v-card-actions>
-			<v-spacer></v-spacer>
-			<v-btn
-        text
-        color="primary"
-        @click="submitThoughtDialog = false;submit(volid, stuid)"
-      >
-			  提交
-			</v-btn>
-			<v-btn
-        text
-        color="primary"
-        @click="submitThoughtDialog = false"
-      >
-			  取消
-			</v-btn>
-		</v-card-actions>
-		</v-card>
-	</v-dialog>
   </v-container>
 </template>
 
@@ -195,32 +104,37 @@ export default {
   data: () => ({
     search: "",
     headers: [
-      { text: "学号", value: "stuId", align: "start", sortable: true },
-      { text: "姓名", value: "stuName" },
+      { text: "义工编号", value: "volId", align: "start", sortable: true },
+      { text: "学号", value: "stuId" },
     ],
-    volworks: [],
-    dialog: false,
-	  dialog_participant: false,
-    dialog1: false,
-	  submitThoughtDialog: false,
-    volid: undefined,
-    onlyDisplayCurrentClass: true,
-    stulst: [],
-    stulstSelected: [],
-    stu_new: undefined,
-	  participantsLst: [],
-    stu: undefined,
-    thought: undefined
+    thoughts: undefined
   }),
-  components: {
-    volinfo,
-  },
   mounted: function () {
     this.pageload();
   },
   methods: {
-    pageload() {
-      this.switchDisplay();
+    async pageload() {
+      this.$store.commit("loading", true);
+      await axios
+        .get("/volunteer/unaudited",{
+
+        })
+        .then((response) => {
+            console.log(response.data);
+            if (response.data.type == "SUCCESS") {
+              dialogs.toasts.success(response.data.message);
+              this.thoughts = response.data.result;
+            } else {
+              dialogs.toasts.error(response.data.message);
+            }
+        })
+        .catch((err) => {
+          dialogs.toasts.error(err);
+        })
+        .finally(() => {
+          this.$store.commit("loading", false);
+        });
+      this.$store.commit("loading", false);
     },
     granted: function () {
       return this.$store.state.info.permission < permissions.teacher;

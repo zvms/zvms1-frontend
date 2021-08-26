@@ -50,6 +50,11 @@ export default new Router({
 			path: '/volunteer/create',
 			name: 'volunteerCreate',
 			component: () => import('../views/volunteer/create.vue')
+		},
+		{
+			path: '/volunteer/audit',
+			name: 'volunteerAudit',
+			component: () => import('../views/volunteer/audit.vue')
 		}
 	]
 })
