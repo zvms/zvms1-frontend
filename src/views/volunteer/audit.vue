@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card color="primary" dark>
+    <v-card>
       <v-card-title>
         未审核感想列表
         <v-text-field
