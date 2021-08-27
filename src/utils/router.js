@@ -5,7 +5,6 @@ Vue.use(Router)
 
 export default new Router({
 	routes: [
-		// 首页
 		{
 			path: '/',
 			name: 'home',
@@ -55,6 +54,11 @@ export default new Router({
 			path: '/volunteer/audit',
 			name: 'volunteerAudit',
 			component: () => import('../views/volunteer/audit.vue')
+		},
+		{
+			path: '/volunteer/holiday',
+			name: 'volunteerHoliday',
+			component: () => import('../views/volunteer/holiday.vue')
 		}
 	]
 })

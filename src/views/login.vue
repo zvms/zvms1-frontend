@@ -131,6 +131,12 @@ export default {
               // }
 
               this.drawers.push({
+                title: "假期义工",
+                to: "/volunteer/holiday",
+                icon: "mdi-view-list",
+              });
+
+              this.drawers.push({
                 title: "登出",
                 to: "/logout",
                 icon: "mdi-exit-to-app",

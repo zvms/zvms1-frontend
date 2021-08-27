@@ -25,11 +25,10 @@
             </thead>
             <tbody>
               <tr
-                v-for="(cls, i) in classSelected"
+                v-for="(stuid, i) in classSelected"
                 :key = "i"
               >
-                <td>{{cls.id}}</td>
-                <td>{{cls.stuMax}}</td>
+                <td>stuid</td>
                 <td>
                   <v-btn
                     class="mx-2"
