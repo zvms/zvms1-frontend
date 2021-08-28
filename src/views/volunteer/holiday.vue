@@ -83,7 +83,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="(stuid ,i) in stuSelected"
+                v-for="(stuid ,i) in form.stuSelected"
                 :key="i"
               >
                 <td>{{stuid}}</td>
@@ -106,7 +106,7 @@
                 <td>
                   <v-select
                     prepend-icon="mdi-switch"
-                    v-model="stu_new"
+                    v-model="stuNew"
                     label="选定学生"
                     :items="stulst"
                     item-text="name"
@@ -169,14 +169,14 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-space>
-		<v-btn
+        <v-spacer></v-spacer>
+		    <v-btn
           text
           color="primary"
           @click="submit"
         >
           提交
-		</v-btn>
+		    </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -190,14 +190,16 @@ import axios from "axios";
 
 export default {
   data: () => ({
+    modalDate: false,
+    modalTime: false,
+    stulst: [],
+    stuNew: undefined,
     form: {
       name: undefined,
       date: undefined,
       time: null,
 
-      stulst: [],
       stuSelected: [],
-      stuNew: undefined,
 
       ftp: undefined,
       description: undefined,
@@ -205,6 +207,7 @@ export default {
       outside: undefined,
       large: undefined
     },
+    rules: [NOTEMPTY()]
   }),
   mounted: function () {
     this.pageload();
@@ -218,24 +221,26 @@ export default {
           : dialogs.toasts.error("获取学生列表失败");
       });
       this.$store.commit("loading", false);
+      console.log(this.stulst);
     },
     addToList: function (){
       let flg = false;
       if (this.stuNew == "" || this.stuNew == undefined) flg = true;
-      for (let i in this.stuSelected){
-        if (this.stuSelected[i] == this.stuNew){
+      for (let i in this.form.stuSelected){
+        if (this.form.stuSelected[i] == this.stuNew){
           flg = true;
           break;
         }
       }
+      // console.log(this.stuSelected,this.stuNew);
       if (!flg)
-        this.stuSelected.push(parseInt(this.stuNew));
+        this.form.stuSelected.push(this.stuNew);
       else
         dialogs.toasts.error("请不要重复报名");
       this.stuNew = "";
     },
     delFromList: function(i){
-      this.stuSelected.splice(i, 1);
+      this.form.stuSelected.splice(i, 1);
     },
     submit: function(){
       this.$store.commit("loading", true);
@@ -244,14 +249,14 @@ export default {
           name: this.form.name,
           date: this.form.date,
           time: this.form.time,
-          stuid: this.form.stuSelected,
+          stuId: this.form.stuSelected,
           description: "假期义工：" + this.form.ftp + "；" + this.form.description,
           inside: parseInt(this.form.inside),
           outside: parseInt(this.form.outside),
           large: parseInt(this.form.large),
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           if (response.data.type == "SUCCESS") {
             dialogs.toasts.success(response.data.message);
           } else {

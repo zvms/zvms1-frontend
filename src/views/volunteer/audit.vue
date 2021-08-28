@@ -144,19 +144,19 @@ export default {
       { text: "学号", value: "stuId" },
     ],
     thoughts: undefined,
-	dialog1: false,
-	stuid: undefined,
-	volid: undefined,
-	thought: undefined,
-	volTime: undefined,
-	volDate: undefined,
-	volDesc: undefined,
-	volTI: undefined,
-	volTO: undefined,
-	volTL: undefined,
-	inside: undefined,
-	outside: undefined,
-	large: undefined
+	  dialog1: false,
+	  stuid: undefined,
+	  volid: undefined,
+	  thought: undefined,
+	  volTime: undefined,
+	  volDate: undefined,
+	  volDesc: undefined,
+	  volTI: undefined,
+	  volTO: undefined,
+	  volTL: undefined,
+	  inside: undefined,
+	  outside: undefined,
+	  large: undefined
   }),
   mounted: function () {
     this.pageload();
@@ -195,87 +195,23 @@ export default {
 	  this.thought = item.thought;
 	  
 	  this.$store.commit("loading", true);
-      await axios
-        .get("/volunteer/fetch/"+this.volid,{
-
-        })
-        .then((response) => {
-            console.log(response.data);
-            if (response.data.type == "SUCCESS") {
-              dialogs.toasts.success(response.data.message);
-              this.volDate = response.data.date;
-              this.volTime = response.data.time;
-              this.volDesc = response.data.description;
-			  this.volTI = response.data.inside;
-			  this.volTO = response.data.outside;
-			  this.volTL = response.data.large;
-            } else {
-              dialogs.toasts.error(response.data.message);
-            }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
-      this.$store.commit("loading", false);
-	},
-	audit: function (status) {
-	  
-	}
-	/*
-    volSignUp: function (volid) {
-      console.log("SignUp: " + volid);
-      this.dialog1 = true;
-
-      this.stulst = undefined;
-      zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
-        stus ? (this.stulst = stus) : (this.stulst = undefined);
-      });
-      this.volid = volid;
-    },
-    signupVolunteer: function(volid){
-      console.log("/volunteer/signup/"+volid,{
-        "stulst": this.stulstSelected
-      });
-      axios
-        .post("/volunteer/signup/"+volid,{
-          "stulst": this.stulstSelected
-        })
-        .then((response) => {
-            console.log(response.data);
-            if (response.data.type == "SUCCESS") {
-              dialogs.toasts.success(response.data.message);
-              for(let k in this.form)
-                this.form[k] = undefined
-            } else {
-              dialogs.toasts.error(response.data.message);
-            }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
-        this.dialog1 = false;
-    },
-	participants: function (volid){
-    this.dialog_participant = true;
-    this.volid = volid;
     axios
-      .get("/volunteer/signerList/"+volid, {
+      .get("/volunteer/fetch/"+this.volid,{
 
       })
       .then((response) => {
-        console.log(response.data);
-        if (response.data.type == "SUCCESS") {
-          dialogs.toasts.success(response.data.message);
-          this.participantsLst = response.data.result;
-        } else {
-          dialogs.toasts.error(response.data.message);
-        }
+          console.log(response.data);
+          if (response.data.type == "SUCCESS") {
+            dialogs.toasts.success(response.data.message);
+            this.volDate = response.data.date;
+            this.volTime = response.data.time;
+            this.volDesc = response.data.description;
+		        this.volTI = response.data.inside;
+		        this.volTO = response.data.outside;
+		        this.volTL = response.data.large;
+          } else {
+            dialogs.toasts.error(response.data.message);
+          }
       })
       .catch((err) => {
         dialogs.toasts.error(err);
@@ -283,85 +219,49 @@ export default {
       .finally(() => {
         this.$store.commit("loading", false);
       });
+    this.$store.commit("loading", false);
 	},
-    volDetail: function (volid) {
-      console.log("Detail:" + volid);
-      this.volid = volid;
-      this.dialog = true;
-    },
-    switchDisplay: function () {
-      if (this.onlyDisplayCurrentClass) this.fetchCurrentClassVol();
-      else this.fetchAllVol();
-    },
-    async fetchCurrentClassVol() {
-      this.$store.commit("loading", true);
-      await zutils.fetchClassVolunter(
-        this.$store.state.info.class,
-        (volworks) => {
-          volworks
-            ? (this.volworks = volworks)
-            : dialogs.toasts.error("获取义工列表失败");
-        }
-      );
-      this.$store.commit("loading", false);
-    },
-    
-    async fetchAllVol() {
-      this.$store.commit("loading", true);
-      await zutils.fetchAllVolunter((volworks) => {
-        volworks
-          ? (this.volworks = volworks)
-          : dialogs.toasts.error("获取义工列表失败");
-      });
-      this.$store.commit("loading", false);
-    },
-    
-    addToList: function (){
-      console.log("Ent");
-      console.log(this.stu_new);
-      console.log(this.stulstSelected);
-      let flg = false;
-      if (this.stu_new == "" || this.stu_new == undefined) flg = true;
-      for (let i in this.stulstSelected){
-        if (this.stulstSelected[i] == this.stu_new){
-          flg = true;
-          break;
-        }
-      }
-      if (!flg)
-        this.stulstSelected.push(this.stu_new);
-      else
-        dialogs.toasts.error("请不要重复报名");
-      this.stu_new = "";
-    },
-    delFromList: function(i){
-      this.stulstSelected.splice(i, 1);
-    },
-
-    rowClick: function(item){
-      this.stu = item.stuId;
-      this.submitThoughtDialog = true;
-    },
-    submit: function(){
-      axios
-        .post("/volunteer/thought/"+this.volid, {
-          "thought":[{"stuId":this.stu,"content":this.thought}]
-        })
-        .then((response) => {
+	audit: function (status) {
+    if(this.inside==undefined || this.inside=="")
+      this.inside = this.volTI;
+    if(this.outside==undefined || this.outside=="")
+      this.outside = this.volTO;
+    if(this.large==undefined || this.large=="")
+      this.large = this.volTL;
+    console.log(status,this.inside,this.outside,this.large);
+	  this.$store.commit("loading", true);
+    axios
+      .post("/volunteer/audit/"+this.volid,{
+        "thought": [{
+          "stuId": this.stuid,
+          "status": status,
+          "inside": this.inside,
+          "outside": this.outside,
+          "large": this.large
+        }]
+      })
+      .then((response) => {
+          console.log(response.data);
           if (response.data.type == "SUCCESS") {
             dialogs.toasts.success(response.data.message);
+            this.volDate = response.data.date;
+            this.volTime = response.data.time;
+            this.volDesc = response.data.description;
+		        this.volTI = response.data.inside;
+		        this.volTO = response.data.outside;
+		        this.volTL = response.data.large;
           } else {
             dialogs.toasts.error(response.data.message);
           }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
-    }
-	*/
+      })
+      .catch((err) => {
+        dialogs.toasts.error(err);
+      })
+      .finally(() => {
+        this.$store.commit("loading", false);
+      });
+    this.$store.commit("loading", false);
+	}
   },
 };
 </script>

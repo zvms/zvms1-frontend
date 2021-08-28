@@ -25,10 +25,11 @@
             </thead>
             <tbody>
               <tr
-                v-for="(stuid, i) in classSelected"
+                v-for="(cls, i) in classSelected"
                 :key = "i"
               >
-                <td>stuid</td>
+                <td>{{cls.id}}</td>
+                <td>{{cls.stuMax}}</td>
                 <td>
                   <v-btn
                     class="mx-2"
@@ -226,8 +227,8 @@ export default {
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
-      // if (this.$refs.form.validate()) {
-      if (true){
+      if (this.$refs.form.validate()) {
+      // if (true){
         console.log("创建义工");
         console.log(this.form);
         this.$store.commit("loading", true);
