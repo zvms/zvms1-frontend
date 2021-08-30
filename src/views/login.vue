@@ -122,13 +122,13 @@ export default {
                   icon: "mdi-view-list",
                 });
               }
-              // if (response.data.permission >= permissions.teacher) {
+              if (response.data.permission >= permissions.teacher) {
                 this.drawers.push({
                   title: "审核义工",
                   to: "/volunteer/audit",
                   icon: "mdi-view-list",
                 });
-              // }
+              }
 
               this.drawers.push({
                 title: "假期义工",
