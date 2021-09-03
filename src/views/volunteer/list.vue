@@ -54,31 +54,11 @@
             :items="participantsLst"
             :search="search"
             :loading="$store.state.isLoading"
-            @click:row="rowClick"
             loading-text="加载中..."
             no-data-text="没有数据哦"
             no-results-text="没有结果"
           >
           </v-data-table>
-        <!--
-		      <v-data-table
-            @click:row="console.log(123)"
-          >
-		      	<thead>
-		      		<td>学号</td>
-		      		<td>姓名</td>
-		      	</thead>
-		      	<tbody>
-		      		<tr
-		      			v-for="(stu, i) in participantsLst"
-		      			:key = "i"
-              >
-		      			<td>{{stu.stuId}}</td>
-		      			<td>{{stu.stuName}}</td>
-		      		</tr>
-		      	</tbody>
-		      </v-data-table>
-          -->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -150,37 +130,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-	<v-dialog v-model="submitThoughtDialog" max-width="80%">
-		<v-card>
-		<v-card-title>义工感想提交</v-card-title>
-		<v-card-text>
-			<v-form ref="form">
-			<v-textarea
-				v-model="thought"
-        placeholder=""
-			>
-			</v-textarea>
-			</v-form>
-		</v-card-text>
-		<v-card-actions>
-			<v-spacer></v-spacer>
-			<v-btn
-        text
-        color="primary"
-        @click="submitThoughtDialog = false;submit(volid, stuid)"
-      >
-			  提交
-			</v-btn>
-			<v-btn
-        text
-        color="primary"
-        @click="submitThoughtDialog = false"
-      >
-			  取消
-			</v-btn>
-		</v-card-actions>
-		</v-card>
-	</v-dialog>
   </v-container>
 </template>
 
@@ -264,6 +213,7 @@ export default {
 	participants: function (volid){
     this.dialog_participant = true;
     this.volid = volid;
+    this.participantsLst = [];
     axios
       .get("/volunteer/signerList/"+volid, {
 
@@ -336,30 +286,6 @@ export default {
     },
     delFromList: function(i){
       this.stulstSelected.splice(i, 1);
-    },
-
-    rowClick: function(item){
-      this.stu = item.stuId;
-      this.submitThoughtDialog = true;
-    },
-    submit: function(){
-      axios
-        .post("/volunteer/thought/"+this.volid, {
-          "thought":[{"stuId":this.stu,"content":this.thought}]
-        })
-        .then((response) => {
-          if (response.data.type == "SUCCESS") {
-            dialogs.toasts.success(response.data.message);
-          } else {
-            dialogs.toasts.error(response.data.message);
-          }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
     }
   },
 };

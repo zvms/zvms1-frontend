@@ -124,7 +124,7 @@ export default {
               }
               if (response.data.permission >= permissions.teacher) {
                 this.drawers.push({
-                  title: "审核义工",
+                  title: "审核感想",
                   to: "/volunteer/audit",
                   icon: "mdi-view-list",
                 });
@@ -133,6 +133,12 @@ export default {
               this.drawers.push({
                 title: "假期义工",
                 to: "/volunteer/holiday",
+                icon: "mdi-view-list",
+              });
+
+              this.drawers.push({
+                title: "感想提交",
+                to: "/volunteer/thought",
                 icon: "mdi-view-list",
               });
 

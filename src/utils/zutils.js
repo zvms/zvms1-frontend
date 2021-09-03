@@ -20,9 +20,9 @@ export default {
                 let stus = response.data.student
                 if (stus)
                     for (var i = 0; i < stus.length; i++) {
-                        var inside = stus[i]["inside"];
-                        var outside = stus[i]["outside"];
-                        var large = stus[i]["large"];
+                        var inside = stus[i]["inside"]/60.0;
+                        var outside = stus[i]["outside"]/60.0;
+                        var large = stus[i]["large"]/60.0;
                         var result = true;
                         if (outside < 20) {
                             inside = inside - (20 - outside) * 2;

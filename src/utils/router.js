@@ -59,6 +59,11 @@ export default new Router({
 			path: '/volunteer/holiday',
 			name: 'volunteerHoliday',
 			component: () => import('../views/volunteer/holiday.vue')
+		},
+		{
+			path: '/volunteer/thought',
+			name: 'volunteerThought',
+			component: () => import('../views/volunteer/thought.vue')
 		}
 	]
 })
