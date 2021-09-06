@@ -52,7 +52,7 @@ export default {
 
     fetchAllVolunter: async (callback) => {
         await Axios
-            .get("/class/volunteer").then((response) => {
+            .get("/volunteer/list").then((response) => {
                 console.log(response.data);
                 callback(response.data.volunteer);
             })

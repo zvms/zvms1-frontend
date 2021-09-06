@@ -122,7 +122,7 @@ export default {
                   icon: "mdi-view-list",
                 });
               }
-              if (response.data.permission >= permissions.teacher) {
+              if (response.data.permission > permissions.teacher) {
                 this.drawers.push({
                   title: "审核感想",
                   to: "/volunteer/audit",
