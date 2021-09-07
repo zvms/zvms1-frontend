@@ -17,6 +17,13 @@
           type="password"
           prepend-icon="mdi-view-list"
         />
+        <v-text-field
+          v-model="pwd_conf"
+          :rules="rules"
+          label="确认密码"
+          type="password"
+          prepend-icon="mdi-view-list"
+        />
         <v-btn
           text
           color="primary"
@@ -37,21 +44,21 @@ var md5=require('md5-node');
 export default {
   data: () => ({
     pwd_old: undefined,
-    pwd_new: undefined
+    pwd_new: undefined,
+    pwd_conf: undefined
   }),
   mounted: function () {
     this.pageload();
   },
   methods: {
     pageload: function(){
-        console.log("ababababaB");
+      
     },
     modifyPwd: function(){
-        console.log("124");
-        console.log("/user/modPwd",{
-            "oldPwd": md5(this.pwd_old),
-            "newPwd": md5(this.pwd_new)
-        });
+      if (this.pwd_new != this.pwd_conf){
+        dialogs.toasts.error("两次密码不一致");
+        return;
+      }
       axios
         .post("/user/modPwd",{
             "oldPwd": md5(this.pwd_old),

@@ -188,6 +188,10 @@ export default {
       console.log("/volunteer/signup/"+volid,{
         "stulst": this.stulstSelected
       });
+      if (this.stulstSelected == []){
+        dialogs.toasts.error("报名列表为空");
+        return;
+      }
       axios
         .post("/volunteer/signup/"+volid,{
           "stulst": this.stulstSelected

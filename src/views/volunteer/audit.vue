@@ -102,13 +102,13 @@
           >通过
           </v-btn>
           <v-btn
-            color="primary"
+            color="red"
             :disabled="$store.state.isLoading"
             @click="audit(2)"
           >拒绝
           </v-btn>
           <v-btn
-            color="primary"
+            color="yellow"
             :disabled="$store.state.isLoading"
             @click="audit(3)"
           >打回

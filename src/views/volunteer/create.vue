@@ -155,19 +155,19 @@
           <v-text-field
             v-model="form.inside"
             :rules="rules"
-            label="校内时长"
+            label="校内时长（单位：分钟）"
             prepend-icon="mdi-view-list"
           />
           <v-text-field
             v-model="form.outside"
             :rules="rules"
-            label="校外时长"
+            label="校外时长（单位：分钟）"
             prepend-icon="mdi-view-list"
           />
           <v-text-field
             v-model="form.large"
             :rules="rules"
-            label="大型时长"
+            label="大型时长（单位：分钟）"
             prepend-icon="mdi-view-list"
           />
         </v-form>

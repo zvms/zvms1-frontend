@@ -129,19 +129,18 @@ export default {
                   icon: "mdi-view-list",
                 });
               }
-
-              this.drawers.push({
-                title: "假期义工",
-                to: "/volunteer/holiday",
-                icon: "mdi-view-list",
-              });
-
-              this.drawers.push({
-                title: "感想提交",
-                to: "/volunteer/thought",
-                icon: "mdi-view-list",
-              });
-
+              if (response.data.permission == permissions.secretary){
+                this.drawers.push({
+                  title: "假期义工",
+                  to: "/volunteer/holiday",
+                  icon: "mdi-view-list",
+                });
+                this.drawers.push({
+                  title: "感想提交",
+                  to: "/volunteer/thought",
+                  icon: "mdi-view-list",
+                });
+              }
               this.drawers.push({
                 title: "登出",
                 to: "/logout",
