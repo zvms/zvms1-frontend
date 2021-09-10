@@ -78,7 +78,7 @@
               v-for="(stuid, i) in stulstSelected"
               :key = "i"
             >
-              <td>{{mp[stuid]}}</td>
+              <td>{{stuid}}</td>
               <td>
                 <v-btn
                   class="mx-2"
@@ -186,7 +186,7 @@ export default {
       });
       this.volid = volid;
       for (let i in this.stulst)
-        this.mp[i.id] = i.name;
+        this.mp[this.stulst[i].id] = this.stulst[i].name;
     },
     signupVolunteer: function(volid){
       // console.log("/volunteer/signup/"+volid,{

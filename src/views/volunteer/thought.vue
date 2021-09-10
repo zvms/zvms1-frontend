@@ -199,6 +199,7 @@ export default {
           this.$store.commit("loading", false);
         });
       this.$store.commit("loading", false);
+      window.location.href = window.location.href;
     }
   },
 };

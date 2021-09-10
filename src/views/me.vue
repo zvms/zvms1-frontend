@@ -12,7 +12,10 @@
         </v-card-text>
       </v-card-title>
     </v-card>
-    <v-card dark color="primary">
+    <v-card color="dark">
+      <h1><a href="https://zhuchengyang.gitee.io/blog/yigong.html">公测须知</a></h1>
+    </v-card>
+    <!-- <v-card dark color="primary">
       <v-card-title>
         <v-icon left>mdi-message</v-icon>
         <span class="font-weight-light title">随机感想</span>
@@ -38,7 +41,7 @@
           </v-tooltip>
         </v-list-item>
       </v-card-actions>
-    </v-card>
+    </v-card> -->
   </v-container>
 </template>
 

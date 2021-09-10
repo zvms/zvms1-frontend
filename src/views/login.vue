@@ -14,6 +14,8 @@
       >
       <br />
       <v-card-text>
+        <h1><a href="https://zhuchengyang.gitee.io/blog/yigong.html">公测须知</a></h1>
+        <br/>
         <v-form ref="form">
           <v-text-field
             type="username"

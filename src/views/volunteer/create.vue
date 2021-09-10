@@ -16,6 +16,7 @@
             label="义工总人数"
             prepend-icon="mdi-account"
           />
+          <!---->
           <v-simple-table>
             <thead>
               <td>班级</td>
@@ -27,7 +28,7 @@
                 v-for="(cls, i) in classSelected"
                 :key = "i"
               >
-                <td>{{mp[cls.id]}}</td>
+                <td>{{cls.id}}</td>
                 <td>{{cls.stuMax}}</td>
                 <td>
                   <v-btn
@@ -59,7 +60,7 @@
                 <td>
                   <v-text-field
                     v-model.number = "count_new"
-                    v-label = "限制人数"
+                    label = "限制人数"
                   >
                   </v-text-field>
                 </td>
@@ -80,7 +81,7 @@
               </tr>
             </tbody>
           </v-simple-table>
-          <p>你已经选中了{{classSelected.length}}个班级，点击加号可以添加一个班级哦~</p>
+          <!---->
           <v-dialog
             ref="dateDialog"
             v-model="modalDate"
@@ -211,7 +212,6 @@ export default {
       class: undefined,
     },
     rules: [NOTEMPTY()],
-    mp: {}
   }),
   components: {},
   mounted: function () {
@@ -224,14 +224,13 @@ export default {
           ? (this.classes = classes)
           : dialogs.toasts.error("获取班级列表失败");
       });
-      for (let i in this.classes)
-        this.mp[i.id] = i.name;
-      
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
       if (this.$refs.form.validate()) {
       // if (true){
+        console.log("创建义工");
+        console.log(this.form);
         this.$store.commit("loading", true);
         axios
           .post("/volunteer/create", {
@@ -261,25 +260,25 @@ export default {
           .finally(() => {
             this.$store.commit("loading", false);
           });
+        }
+      },
+      addToList: function (){
+        let flg = false;
+        if (this.class_new == "") flg = true;
+        for (let i in this.classSelected)
+          if (i["id"] == this.class_new){
+            flg = true;
+            break;
+          }
+        if (!flg)
+          this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
+        this.class_new = "";
+        this.count_new = 0;
+      },
+      delFromList: function(i){
+        this.classSelected.splice(i, 1);
       }
     },
-    addToList: function (){
-      let flg = false;
-      if (this.class_new == "") flg = true;
-      for (let i in this.classSelected)
-        if (i["id"] == this.class_new){
-          flg = true;
-          break;
-        }
-      if (!flg)
-        this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
-      this.class_new = "";
-      this.count_new = 0;
-    },
-    delFromList: function(i){
-      this.classSelected.splice(i, 1);
-    }
-  }
 };
 </script>
 
