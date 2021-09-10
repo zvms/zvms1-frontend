@@ -218,6 +218,7 @@ export default {
       this.$store.commit("loading", false);
     },
     audit: function (status) {
+      if(await dialogs.confirm()){
       this.dialog1 = false;
       if(status==1){
         if(this.inside==undefined || this.inside=="")
@@ -264,6 +265,7 @@ export default {
           this.$store.commit("loading", false);
         });
       this.$store.commit("loading", false);
+      }
     }
   },
 };
