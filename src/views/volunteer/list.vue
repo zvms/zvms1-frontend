@@ -75,7 +75,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(stuid, i) in stulstSelected"
+              v-for="(stu, i) in stulstSelected"
               :key = "i"
             >
               <td>{{mp[stuid]}}</td>
@@ -102,7 +102,7 @@
                   label="选定学生"
                   :items="stulst"
                   item-text="name"
-                  item-value="id"
+                  item-value="{'id':id,'name':name}"
                 >
                 </v-select>
               </td>
@@ -189,9 +189,9 @@ export default {
         this.mp[i.id] = i.name;
     },
     signupVolunteer: function(volid){
-      console.log("/volunteer/signup/"+volid,{
-        "stulst": this.stulstSelected
-      });
+      // console.log("/volunteer/signup/"+volid,{
+      //   "stulst": this.stulstSelected
+      // });
       if (this.stulstSelected == []){
         dialogs.toasts.error("报名列表为空");
         return;
@@ -201,7 +201,7 @@ export default {
           "stulst": this.stulstSelected
         })
         .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             if (response.data.type == "SUCCESS") {
               dialogs.toasts.success(response.data.message);
               for(let k in this.form)
@@ -275,11 +275,11 @@ export default {
     },
     
     addToList: function (){
-      console.log("Ent");
-      console.log(this.stu_new);
-      console.log(this.stulstSelected);
+      // console.log("Ent");
+      // console.log(this.stu_new);
+      // console.log(this.stulstSelected);
       let flg = false;
-      if (this.stu_new == "" || this.stu_new == undefined) flg = true;
+      if (this.stu_new == undefined) flg = true;
       for (let i in this.stulstSelected){
         if (this.stulstSelected[i] == this.stu_new){
           flg = true;
@@ -290,7 +290,7 @@ export default {
         this.stulstSelected.push(this.stu_new);
       else
         dialogs.toasts.error("请不要重复报名");
-      this.stu_new = "";
+      this.stu_new = undefined;
     },
     delFromList: function(i){
       this.stulstSelected.splice(i, 1);
