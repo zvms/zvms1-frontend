@@ -75,7 +75,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(stu, i) in stulstSelected"
+              v-for="(stuid, i) in stulstSelected"
               :key = "i"
             >
               <td>{{mp[stuid]}}</td>
@@ -102,7 +102,7 @@
                   label="选定学生"
                   :items="stulst"
                   item-text="name"
-                  item-value="{'id':id,'name':name}"
+                  item-value="id"
                 >
                 </v-select>
               </td>
