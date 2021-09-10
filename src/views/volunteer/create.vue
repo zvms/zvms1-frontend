@@ -224,7 +224,7 @@ export default {
           ? (this.classes = classes)
           : dialogs.toasts.error("获取班级列表失败");
       });
-      for (i in this.classes)
+      for (let i in this.classes)
         this.mp[i.id] = i.name;
       
       this.$store.commit("loading", false);
@@ -254,7 +254,7 @@ export default {
       // if (true){
         // console.log("创建义工");
         // console.log(this.form);
-		this.addToList();
+        this.addToList();
         this.$store.commit("loading", true);
         axios
           .post("/volunteer/create", {

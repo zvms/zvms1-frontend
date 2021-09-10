@@ -185,7 +185,7 @@ export default {
         stus ? (this.stulst = stus) : (this.stulst = undefined);
       });
       this.volid = volid;
-      for (i in this.stulst)
+      for (let i in this.stulst)
         this.mp[i.id] = i.name;
     },
     signupVolunteer: function(volid){
