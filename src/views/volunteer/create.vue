@@ -16,7 +16,6 @@
             label="义工总人数"
             prepend-icon="mdi-account"
           />
-          <!---->
           <v-simple-table>
             <thead>
               <td>班级</td>
@@ -28,7 +27,7 @@
                 v-for="(cls, i) in classSelected"
                 :key = "i"
               >
-                <td>{{cls.id}}</td>
+                <td>{{mp[cls.id]}}</td>
                 <td>{{cls.stuMax}}</td>
                 <td>
                   <v-btn
@@ -81,7 +80,7 @@
               </tr>
             </tbody>
           </v-simple-table>
-          <!---->
+          <p>你已经选中了{{classSelected.length}}个班级，点击加号可以添加一个班级哦~</p>
           <v-dialog
             ref="dateDialog"
             v-model="modalDate"
@@ -212,6 +211,7 @@ export default {
       class: undefined,
     },
     rules: [NOTEMPTY()],
+    mp: {}
   }),
   components: {},
   mounted: function () {
@@ -224,6 +224,9 @@ export default {
           ? (this.classes = classes)
           : dialogs.toasts.error("获取班级列表失败");
       });
+      for (i in this.classes)
+        this.mp[i.id] = i.name;
+      
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {

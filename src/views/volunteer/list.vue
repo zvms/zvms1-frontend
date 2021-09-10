@@ -78,7 +78,7 @@
               v-for="(stuid, i) in stulstSelected"
               :key = "i"
             >
-              <td>{{stuid}}</td>
+              <td>{{mp[stuid]}}</td>
               <td>
                 <v-btn
                   class="mx-2"
@@ -123,6 +123,7 @@
             </tr>
           </tbody>
         </v-simple-table>
+        <p>当前选中了{{stulstSelected.length}}个学生哦，你可以点击加号添加一个学生</p>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="signupVolunteer(volid)">确定</v-btn>
@@ -154,12 +155,13 @@ export default {
 	  submitThoughtDialog: false,
     volid: undefined,
     onlyDisplayCurrentClass: true,
-    stulst: [],
+    stulst: undefined,
     stulstSelected: [],
     stu_new: undefined,
 	  participantsLst: [],
     stu: undefined,
-    thought: undefined
+    thought: undefined,
+    mp: {}
   }),
   components: {
     volinfo,
@@ -183,6 +185,8 @@ export default {
         stus ? (this.stulst = stus) : (this.stulst = undefined);
       });
       this.volid = volid;
+      for (i in this.stulst)
+        this.mp[i.id] = i.name;
     },
     signupVolunteer: function(volid){
       console.log("/volunteer/signup/"+volid,{

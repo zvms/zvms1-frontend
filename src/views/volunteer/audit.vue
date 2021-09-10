@@ -219,52 +219,53 @@ export default {
     },
     audit: function (status) {
       if(await dialogs.confirm()){
-      this.dialog1 = false;
-      if(status==1){
-        if(this.inside==undefined || this.inside=="")
-          this.inside = this.volTI;
-        if(this.outside==undefined || this.outside=="")
-          this.outside = this.volTO;
-        if(this.large==undefined || this.large=="")
-          this.large = this.volTL;
-      }else{
-        this.inside = "0";
-        this.outside = "0";
-        this.large = "0";
-      }
-      console.log(status,this.inside,this.outside,this.large);
-        this.$store.commit("loading", true);
-      axios
-        .post("/volunteer/audit/"+this.volid,{
-          "thought": [{
-            "stuId": this.stuid,
-            "status": status,
-            "inside": this.inside,
-            "outside": this.outside,
-            "large": this.large
-          }]
-        })
-        .then((response) => {
-            console.log(response.data);
-            if (response.data.type == "SUCCESS") {
-              dialogs.toasts.success(response.data.message);
-              this.volDate = response.data.date;
-              this.volTime = response.data.time;
-              this.volDesc = response.data.description;
-              this.volTI = response.data.inside;
-              this.volTO = response.data.outside;
-              this.volTL = response.data.large;
-            } else {
-              dialogs.toasts.error(response.data.message);
-            }
-        })
-        .catch((err) => {
-          dialogs.toasts.error(err);
-        })
-        .finally(() => {
-          this.$store.commit("loading", false);
-        });
-      this.$store.commit("loading", false);
+        this.dialog1 = false;
+        if(status==1){
+          if(this.inside==undefined || this.inside=="")
+            this.inside = this.volTI;
+          if(this.outside==undefined || this.outside=="")
+            this.outside = this.volTO;
+          if(this.large==undefined || this.large=="")
+            this.large = this.volTL;
+        }else{
+          this.inside = "0";
+          this.outside = "0";
+          this.large = "0";
+        }
+        console.log(status,this.inside,this.outside,this.large);
+          this.$store.commit("loading", true);
+        axios
+          .post("/volunteer/audit/"+this.volid,{
+            "thought": [{
+              "stuId": this.stuid,
+              "status": status,
+              "inside": this.inside,
+              "outside": this.outside,
+              "large": this.large
+            }]
+          })
+          .then((response) => {
+              console.log(response.data);
+              if (response.data.type == "SUCCESS") {
+                dialogs.toasts.success(response.data.message);
+                this.volDate = response.data.date;
+                this.volTime = response.data.time;
+                this.volDesc = response.data.description;
+                this.volTI = response.data.inside;
+                this.volTO = response.data.outside;
+                this.volTL = response.data.large;
+              } else {
+                dialogs.toasts.error(response.data.message);
+              }
+          })
+          .catch((err) => {
+            dialogs.toasts.error(err);
+          })
+          .finally(() => {
+            this.$store.commit("loading", false);
+          });
+        this.$store.commit("loading", false);
+        window.location.href = window.location.href;
       }
     }
   },
