@@ -28,7 +28,7 @@
                 v-for="(cls, i) in classSelected"
                 :key = "i"
               >
-                <td>{{cls.id}}</td>
+                <td>{{cls.name}}</td>
                 <td>{{cls.stuMax}}</td>
                 <td>
                   <v-btn
@@ -53,7 +53,7 @@
                     label="限定班级"
                     :items="classes"
                     item-text="name"
-                    item-value="id"
+                    item-value="{'id':id,'name':name}"
                   >
                   </v-select>
                 </td>
@@ -226,11 +226,32 @@ export default {
       });
       this.$store.commit("loading", false);
     },
+    addToList: function (){
+      let flg = false;
+      if (this.class_new == undefined) flg = true;
+      for (let i in this.classSelected)
+        if (i["id"] == this.class_new["id"]){
+          flg = true;
+          break;
+        }
+      if (!flg)
+        this.classSelected.push({
+          "id": this.class_new["id"],
+          "name": this.class_new["name"],
+          "stuMax": parseInt(this.count_new)
+        });
+      this.class_new = undefined;
+      this.count_new = 0;
+    },
+    delFromList: function(i){
+      this.classSelected.splice(i, 1);
+    },
     createVolunteer: function () {
       if (this.$refs.form.validate()) {
       // if (true){
-        console.log("创建义工");
-        console.log(this.form);
+        // console.log("创建义工");
+        // console.log(this.form);
+		this.addToList();
         this.$store.commit("loading", true);
         axios
           .post("/volunteer/create", {
@@ -260,25 +281,9 @@ export default {
           .finally(() => {
             this.$store.commit("loading", false);
           });
-        }
-      },
-      addToList: function (){
-        let flg = false;
-        if (this.class_new == "") flg = true;
-        for (let i in this.classSelected)
-          if (i["id"] == this.class_new){
-            flg = true;
-            break;
-          }
-        if (!flg)
-          this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
-        this.class_new = "";
-        this.count_new = 0;
-      },
-      delFromList: function(i){
-        this.classSelected.splice(i, 1);
       }
     },
+  }
 };
 </script>
 
