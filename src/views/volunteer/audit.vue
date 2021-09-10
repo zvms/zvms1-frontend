@@ -218,7 +218,8 @@ export default {
       this.$store.commit("loading", false);
     },
     audit: function (status) {
-      if(await dialogs.confirm()){
+      let a = dialogs.confirm();
+      if (a){
         this.dialog1 = false;
         if(status==1){
           if(this.inside==undefined || this.inside=="")
