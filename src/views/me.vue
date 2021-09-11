@@ -62,7 +62,7 @@ export default {
   }),
   mounted: function () {
     this.initChips();
-    this.randomThought();
+    // this.randomThought();
   },
   methods: {
     initChips: function () {

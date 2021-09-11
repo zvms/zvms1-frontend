@@ -29,7 +29,7 @@
           <v-icon left>mdi-clipboard-text</v-icon>
           查看已报名
         </v-btn>
-        <v-btn color="primary" @click="volSignUp(vol.id)">
+        <v-btn v-if="granted()" color="primary" @click="volSignUp(vol.id)">
           <v-icon left>mdi-account-plus</v-icon>
           报名
         </v-btn>
@@ -78,7 +78,7 @@
               v-for="(stuid, i) in stulstSelected"
               :key = "i"
             >
-              <td>{{stuid}}</td>
+              <td>{{mp[stuid]}}</td>
               <td>
                 <v-btn
                   class="mx-2"
@@ -181,18 +181,17 @@ export default {
       this.dialog1 = true;
 
       this.stulst = undefined;
+	  this.stulstSelected = [];
       zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
         stus ? (this.stulst = stus) : (this.stulst = undefined);
+        this.volid = volid;
+        for (let i in this.stulst)
+          this.mp[this.stulst[i].id] = this.stulst[i].name;
+	    console.log(this.mp);
       });
-      this.volid = volid;
-      for (let i in this.stulst)
-        this.mp[this.stulst[i].id] = this.stulst[i].name;
     },
     signupVolunteer: function(volid){
-      // console.log("/volunteer/signup/"+volid,{
-      //   "stulst": this.stulstSelected
-      // });
-      if (this.stulstSelected == []){
+      if (this.stulstSelected.length == 0){
         dialogs.toasts.error("报名列表为空");
         return;
       }

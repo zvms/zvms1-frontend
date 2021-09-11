@@ -18,15 +18,15 @@
           <td>{{ vol.time }}</td>
         </tr>
         <tr>
-          <td>校内时长</td>
+          <td>校内时长（单位：分钟）</td>
           <td>{{ vol.inside }}</td>
         </tr>
         <tr>
-          <td>校外时长</td>
+          <td>校外时长（单位：分钟）</td>
           <td>{{ vol.outside }}</td>
         </tr>
         <tr>
-          <td>大型时长</td>
+          <td>大型时长（单位：分钟）</td>
           <td>{{ vol.large }}</td>
         </tr>
         <tr>

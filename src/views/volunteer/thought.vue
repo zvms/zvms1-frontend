@@ -48,15 +48,15 @@
               <td>{{volDesc}}</td>
             </tr>
             <tr>
-              <td>校内时长</td>
+              <td>校内时长（分钟）</td>
               <td>{{volTI}}</td>
             </tr>
             <tr>
-              <td>校外时长</td>
+              <td>校外时长（分钟）</td>
               <td>{{volTO}}</td>
             </tr>
             <tr>
-              <td>大型时长</td>
+              <td>大型时长（分钟）</td>
               <td>{{volTL}}</td>
             </tr>
             <tr>
@@ -187,7 +187,7 @@ export default {
           console.log(response.data);
           if (response.data.type == "SUCCESS") {
             dialogs.toasts.success(response.data.message);
-
+			location.reload();
           } else {
             dialogs.toasts.error(response.data.message);
           }
@@ -199,7 +199,6 @@ export default {
           this.$store.commit("loading", false);
         });
       this.$store.commit("loading", false);
-      window.location.href = window.location.href;
     }
   },
 };

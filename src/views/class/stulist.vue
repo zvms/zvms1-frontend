@@ -82,9 +82,9 @@ export default {
     headers: [
       { text: "学号", value: "id", align: "start", sortable: true },
       { text: "姓名", value: "name" },
-      { text: "校内", value: "inside" },
-      { text: "校外", value: "outside" },
-      { text: "大型", value: "large" },
+      { text: "校内（分钟）", value: "inside" },
+      { text: "校外（分钟）", value: "outside" },
+      { text: "大型（分钟）", value: "large" },
       { text: "完成", value: "finished" },
     ],
   }),

@@ -86,7 +86,7 @@
                 v-for="(stuid ,i) in form.stuSelected"
                 :key="i"
               >
-                <td>{{stuid}}</td>
+                <td>{{mp[stuid]}}</td>
                 <td>
                   <v-btn
                     class="mx-2"
@@ -149,21 +149,21 @@
           <v-text-field
             v-model="form.inside"
             :rules="rules"
-            label="校内义工时长"
+            label="校内义工时长（分钟）"
             prepend-icon="mdi-pen"
           />
           
           <v-text-field
             v-model="form.outside"
             :rules="rules"
-            label="校外义工时长"
+            label="校外义工时长（分钟）"
             prepend-icon="mdi-pen"
           />
 
           <v-text-field
             v-model="form.large"
             :rules="rules"
-            label="大型活动义工时长"
+            label="大型活动义工时长（分钟）"
             prepend-icon="mdi-pen"
           />
         </v-form>
@@ -194,13 +194,12 @@ export default {
     modalTime: false,
     stulst: [],
     stuNew: undefined,
+	mp: {},
     form: {
       name: undefined,
       date: undefined,
       time: null,
-
       stuSelected: [],
-
       ftp: undefined,
       description: undefined,
       inside: undefined,
@@ -220,6 +219,8 @@ export default {
           ? (this.stulst = stulst)
           : dialogs.toasts.error("获取学生列表失败");
       });
+	  for(let i = 0; i < this.stulst.length; i ++)
+		this.mp[this.stulst[i].id] = this.stulst[i].name;
       this.$store.commit("loading", false);
       console.log(this.stulst);
     },
@@ -243,6 +244,10 @@ export default {
       this.form.stuSelected.splice(i, 1);
     },
     submit: function(){
+	  if (this.form.stuSelected.length == 0){
+	    dialogs.toasts.error("报名学生列表为空");
+		return;
+	  }
       this.$store.commit("loading", true);
       axios
         .post("/volunteer/holiday",{

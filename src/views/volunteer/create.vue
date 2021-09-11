@@ -28,7 +28,7 @@
                 v-for="(cls, i) in classSelected"
                 :key = "i"
               >
-                <td>{{cls.id}}</td>
+                <td>{{mp[cls.id]}}</td>
                 <td>{{cls.stuMax}}</td>
                 <td>
                   <v-btn
@@ -155,19 +155,19 @@
           <v-text-field
             v-model="form.inside"
             :rules="rules"
-            label="校内时长（单位：分钟）"
+            label="校内时长（分钟）"
             prepend-icon="mdi-view-list"
           />
           <v-text-field
             v-model="form.outside"
             :rules="rules"
-            label="校外时长（单位：分钟）"
+            label="校外时长（分钟）"
             prepend-icon="mdi-view-list"
           />
           <v-text-field
             v-model="form.large"
             :rules="rules"
-            label="大型时长（单位：分钟）"
+            label="大型时长（分钟）"
             prepend-icon="mdi-view-list"
           />
         </v-form>
@@ -212,6 +212,7 @@ export default {
       class: undefined,
     },
     rules: [NOTEMPTY()],
+	mp: {}
   }),
   components: {},
   mounted: function () {
@@ -224,6 +225,8 @@ export default {
           ? (this.classes = classes)
           : dialogs.toasts.error("获取班级列表失败");
       });
+	  for(let i = 0; i < this.classes.length; i ++)
+		this.mp[this.classes[i].id] = this.classes[i].name;
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
@@ -265,11 +268,14 @@ export default {
       addToList: function (){
         let flg = false;
         if (this.class_new == "") flg = true;
-        for (let i in this.classSelected)
-          if (i["id"] == this.class_new){
+		if (isNaN(parseInt(this.count_new)) || parseInt(this.count_new)<=0) flg = true;
+        for (let i in this.classSelected){
+		  console.log(i);
+          if (this.classSelected[i]["id"] == this.class_new){
             flg = true;
             break;
           }
+		 }
         if (!flg)
           this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
         this.class_new = "";
