@@ -187,7 +187,7 @@ export default {
           console.log(response.data);
           if (response.data.type == "SUCCESS") {
             dialogs.toasts.success(response.data.message);
-			location.reload();
+			this.pageload();
           } else {
             dialogs.toasts.error(response.data.message);
           }
