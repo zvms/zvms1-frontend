@@ -26,6 +26,11 @@ export default new Router({
 			component: () => import('../views/modifyPwd.vue')
 		},
 		{
+			path: '/report',
+			name: 'report',
+			component: () => import('../views/report.vue')
+		},
+		{
 			path: '/logout',
 			name: 'logout',
 			component: () => import('../views/logout.vue')

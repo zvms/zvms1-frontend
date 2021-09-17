@@ -144,6 +144,11 @@ export default {
                 });
               }
               this.drawers.push({
+                title: "反馈错误",
+                to: "/report",
+                icon: "mdi-alert",
+              });
+              this.drawers.push({
                 title: "登出",
                 to: "/logout",
                 icon: "mdi-exit-to-app",
