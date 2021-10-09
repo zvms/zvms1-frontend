@@ -56,9 +56,9 @@ export default {
     headers: [
       { text: "义工ID", value: "volId", align: "start", sortable: true },
       { text: "义工名称", value: "name" },
-      { text: "校内时长（单位：分钟）", value: "inside" },
-      { text: "校外时长（单位：分钟）", value: "outside" },
-      { text: "大型时长（单位：分钟）", value: "large" },
+      { text: "校内时长", value: "inside" },
+      { text: "校外时长", value: "outside" },
+      { text: "大型时长", value: "large" },
       { text: "完成状态", value: "status" },
     ],
   }),
@@ -77,6 +77,12 @@ export default {
               dialogs.toasts.error(response.data.message);
             else if (response.data.type == "SUCCESS") {
               this.volworks = response.data.rec;
+	          for (var i = 0; i < this.volworks.length; i++) {
+	              this.volworks[i].inside = this.volworks[i].inside / 60 + "小时" + this.volworks[i].inside % 60 + "分钟";
+	              this.volworks[i].outside = this.volworks[i].outside / 60 + "小时" + this.volworks[i].outside % 60 + "分钟";
+	              this.volworks[i].large = this.volworks[i].large / 60 + "小时" + this.volworks[i].large % 60 + "分钟";
+	          }
+ 	      }
             } else dialogs.toasts.error("未知错误");
           })
           .catch((error) => {
