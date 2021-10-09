@@ -48,16 +48,16 @@
               <td>{{volDesc}}</td>
             </tr>
             <tr>
-              <td>校内时长（分钟）</td>
-              <td>{{volTI}}</td>
+              <td>校内时长</td>
+              <td>{{volTI/60}}小时{{volTI%60}}分钟</td>
             </tr>
             <tr>
-              <td>校外时长（分钟）</td>
-              <td>{{volTO}}</td>
+              <td>校外时长</td>
+              <td>{{volTO/60}}小时{{volTO%60}}分钟</td>
             </tr>
             <tr>
               <td>大型时长（分钟）</td>
-              <td>{{volTL}}</td>
+              <td>{{volTL/60}}小时{{volTL%60}}分钟</td>
             </tr>
             <tr>
               <td>学号</td>
