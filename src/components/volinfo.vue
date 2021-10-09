@@ -18,16 +18,16 @@
           <td>{{ vol.time }}</td>
         </tr>
         <tr>
-          <td>校内时长（单位：分钟）</td>
-          <td>{{ vol.inside }}</td>
+          <td>校内时长</td>
+          <td>{{ vol.inside / 60 }}小时{{ vol.inside % 60 }}分钟</td>
         </tr>
         <tr>
-          <td>校外时长（单位：分钟）</td>
-          <td>{{ vol.outside }}</td>
+          <td>校外时长</td>
+          <td>{{ vol.outside / 60 }}小时{{ vol.outside % 60 }}分钟</td>
         </tr>
         <tr>
-          <td>大型时长（单位：分钟）</td>
-          <td>{{ vol.large }}</td>
+          <td>大型时长</td>
+          <td>{{ vol.large / 60 }}小时{{ vol.large % 60 }}分钟</td>
         </tr>
         <tr>
           <td>人数</td>
