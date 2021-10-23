@@ -56,9 +56,9 @@ export default {
     headers: [
       { text: "义工ID", value: "volId", align: "start", sortable: true },
       { text: "义工名称", value: "name" },
-      { text: "校内时长（单位：分钟）", value: "inside" },
-      { text: "校外时长（单位：分钟）", value: "outside" },
-      { text: "大型时长（单位：分钟）", value: "large" },
+      { text: "校内时长", value: "inside" },
+      { text: "校外时长", value: "outside" },
+      { text: "大型时长", value: "large" },
       { text: "完成状态", value: "status" },
     ],
   }),
