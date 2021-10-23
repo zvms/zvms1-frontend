@@ -4,14 +4,6 @@
       <v-card-title>
         义工列表
         <v-spacer></v-spacer>
-        <v-switch
-          color="secondary"
-          label="仅显示本班"
-          @click="switchDisplay()"
-          v-model="onlyDisplayCurrentClass"
-          v-show="!granted()"
-          dense
-        ></v-switch>
       </v-card-title>
     </v-card>
     <v-card v-for="vol in volworks" v-bind:key="vol.id">
@@ -46,7 +38,7 @@
     </v-dialog>
     <v-dialog v-model="dialog_participant" max-width="80%">
       <v-card>
-		    <v-card-title>报名列表</v-card-title>
+            <v-card-title>报名列表</v-card-title>
         <v-card-text>
           <v-data-table
             fixed-header
@@ -150,15 +142,15 @@ export default {
     ],
     volworks: [],
     dialog: false,
-	  dialog_participant: false,
+      dialog_participant: false,
     dialog1: false,
-	  submitThoughtDialog: false,
+      submitThoughtDialog: false,
     volid: undefined,
     onlyDisplayCurrentClass: true,
     stulst: undefined,
     stulstSelected: [],
     stu_new: undefined,
-	  participantsLst: [],
+      participantsLst: [],
     stu: undefined,
     thought: undefined,
     mp: {}
@@ -170,7 +162,8 @@ export default {
     this.pageload();
   },
   methods: {
-    pageload() {
+    async pageload() {
+      await zutils.checkToken(this);
       this.switchDisplay();
     },
     granted: function () {
@@ -181,13 +174,13 @@ export default {
       this.dialog1 = true;
 
       this.stulst = undefined;
-	  this.stulstSelected = [];
+      this.stulstSelected = [];
       zutils.fetchStudentList(this.$store.state.info.class, (stus) => {
         stus ? (this.stulst = stus) : (this.stulst = undefined);
         this.volid = volid;
         for (let i in this.stulst)
           this.mp[this.stulst[i].id] = this.stulst[i].name;
-	    console.log(this.mp);
+        console.log(this.mp);
       });
     },
     signupVolunteer: function(volid){
@@ -217,7 +210,7 @@ export default {
         });
         this.dialog1 = false;
     },
-	participants: function (volid){
+    participants: function (volid){
     this.dialog_participant = true;
     this.volid = volid;
     this.participantsLst = [];
@@ -240,15 +233,15 @@ export default {
       .finally(() => {
         this.$store.commit("loading", false);
       });
-	},
+    },
     volDetail: function (volid) {
       console.log("Detail:" + volid);
       this.volid = volid;
       this.dialog = true;
     },
     switchDisplay: function () {
-      if (this.onlyDisplayCurrentClass) this.fetchCurrentClassVol();
-      else this.fetchAllVol();
+       if (this.granted()) this.fetchCurrentClassVol();
+       else this.fetchAllVol();
     },
     async fetchCurrentClassVol() {
       this.$store.commit("loading", true);

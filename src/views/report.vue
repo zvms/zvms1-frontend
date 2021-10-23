@@ -3,11 +3,13 @@
     <v-card>
       <v-card-title>反馈错误</v-card-title>
       <v-card-text>
-        <v-textarea
-				        v-model="report"
-                label="问题的描述"
-                placeholder=""
-			        ></v-textarea>
+        <v-text-field
+          v-model="report"
+          :rules="rules"
+          label="问题的描述"
+          type="text"
+          prepend-icon="mdi-alert"
+        />
         <v-btn
           text
           color="primary"
@@ -34,7 +36,6 @@ export default {
   },
   methods: {
     pageload: function(){
-      
     },
     submitReport: function(){
       axios
