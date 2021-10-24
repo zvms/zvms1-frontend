@@ -49,15 +49,15 @@
             </tr>
             <tr>
               <td>校内时长</td>
-              <td>{{volTI/60}}小时{{volTI%60}}分钟</td>
+              <td>{{ timeToHint(volTI) }}</td>
             </tr>
             <tr>
               <td>校外时长</td>
-              <td>{{volTO/60}}小时{{volTO%60}}分钟</td>
+              <td>{{ timeToHint(volTO) }}</td>
             </tr>
             <tr>
-              <td>大型时长（分钟）</td>
-              <td>{{volTL/60}}小时{{volTL%60}}分钟</td>
+              <td>大型时长</td>
+              <td>{{ timeToHint(volTL) }}</td>
             </tr>
             <tr>
               <td>学号</td>
@@ -128,9 +128,8 @@
 <script>
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions";
-import volinfo from "../../components/volinfo";
-import zutils from "../../utils/zutils.js";
 import axios from "axios";
+import zutils from "../../utils/zutils.js";
 
 export default {
   data: () => ({
@@ -158,7 +157,16 @@ export default {
     this.pageload();
   },
   methods: {
+    timeToHint: function (a){
+        let hr = parseInt(a / 60);
+        let mi = a % 60;
+        if (hr != 0)
+            return hr + " 小时 " + mi + " 分钟";
+        else
+            return mi + "分钟";
+    },
     async pageload() {
+      await zutils.checkToken(this);
       this.$store.commit("loading", true);
       await axios
         .get("/volunteer/unaudited",{
@@ -219,56 +227,56 @@ export default {
     },
     audit: function (status) {
       dialogs.confirm("",(value)=>{
-		  if (value){
-			this.dialog1 = false;
-			if(status==1){
-			  if(this.inside==undefined || this.inside=="")
-				this.inside = this.volTI;
-			  if(this.outside==undefined || this.outside=="")
-				this.outside = this.volTO;
-			  if(this.large==undefined || this.large=="")
-				this.large = this.volTL;
-			}else{
-			  this.inside = "0";
-			  this.outside = "0";
-			  this.large = "0";
-			}
-			console.log(status,this.inside,this.outside,this.large);
-			  this.$store.commit("loading", true);
-			axios
-			  .post("/volunteer/audit/"+this.volid,{
-				"thought": [{
-				  "stuId": this.stuid,
-				  "status": status,
-				  "inside": this.inside,
-				  "outside": this.outside,
-				  "large": this.large
-				}]
-			  })
-			  .then((response) => {
-				  console.log(response.data);
-				  if (response.data.type == "SUCCESS") {
-					dialogs.toasts.success(response.data.message);
-					this.volDate = response.data.date;
-					this.volTime = response.data.time;
-					this.volDesc = response.data.description;
-					this.volTI = response.data.inside;
-					this.volTO = response.data.outside;
-					this.volTL = response.data.large;
-				  } else {
-					dialogs.toasts.error(response.data.message);
-				  }
-			  })
-			  .catch((err) => {
-				dialogs.toasts.error(err);
-			  })
-			  .finally(() => {
-				this.$store.commit("loading", false);
-			  });
-			this.$store.commit("loading", false);
-			this.pageload();
-		  }
-	  });
+          if (value){
+            this.dialog1 = false;
+            if(status==1){
+              if(this.inside==undefined || this.inside=="")
+                this.inside = this.volTI;
+              if(this.outside==undefined || this.outside=="")
+                this.outside = this.volTO;
+              if(this.large==undefined || this.large=="")
+                this.large = this.volTL;
+            }else{
+              this.inside = "0";
+              this.outside = "0";
+              this.large = "0";
+            }
+            console.log(status,this.inside,this.outside,this.large);
+              this.$store.commit("loading", true);
+            axios
+              .post("/volunteer/audit/"+this.volid,{
+                "thought": [{
+                  "stuId": this.stuid,
+                  "status": status,
+                  "inside": this.inside,
+                  "outside": this.outside,
+                  "large": this.large
+                }]
+              })
+              .then((response) => {
+                  console.log(response.data);
+                  if (response.data.type == "SUCCESS") {
+                    dialogs.toasts.success(response.data.message);
+                    this.volDate = response.data.date;
+                    this.volTime = response.data.time;
+                    this.volDesc = response.data.description;
+                    this.volTI = response.data.inside;
+                    this.volTO = response.data.outside;
+                    this.volTL = response.data.large;
+                  } else {
+                    dialogs.toasts.error(response.data.message);
+                  }
+              })
+              .catch((err) => {
+                dialogs.toasts.error(err);
+              })
+              .finally(() => {
+                this.$store.commit("loading", false);
+              });
+            this.$store.commit("loading", false);
+            location.reload();
+          }
+      });
     }
   },
 };

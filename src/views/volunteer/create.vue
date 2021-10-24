@@ -212,7 +212,7 @@ export default {
       class: undefined,
     },
     rules: [NOTEMPTY()],
-	mp: {}
+    mp: {}
   }),
   components: {},
   mounted: function () {
@@ -220,13 +220,15 @@ export default {
   },
   methods: {
     async pageload() {
+      this.$store.commit("loading", true);
+      await zutils.checkToken(this);
       await zutils.fetchClassList((classes) => {
         classes
           ? (this.classes = classes)
           : dialogs.toasts.error("获取班级列表失败");
       });
-	  for(let i = 0; i < this.classes.length; i ++)
-		this.mp[this.classes[i].id] = this.classes[i].name;
+      for(let i = 0; i < this.classes.length; i ++)
+        this.mp[this.classes[i].id] = this.classes[i].name;
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
@@ -238,7 +240,7 @@ export default {
             this.form.inside != parseInt(this.form.inside) || isNaN(parseInt(this.form.inside)) || parseInt(this.form.inside) <= 0 ||
             this.form.outside != parseInt(this.form.outside) || isNaN(parseInt(this.form.outside)) || parseInt(this.form.outside) <= 0 ||
             this.form.large != parseInt(this.form.large) || isNaN(parseInt(this.form.large)) || parseInt(this.form.large) <= 0) {
-                dialog.toasts.error("数据不合法");
+                dialogs.toasts.error("数据不合法");
                 return;
             }
         this.$store.commit("loading", true);
@@ -275,14 +277,14 @@ export default {
       addToList: function (){
         let flg = false;
         if (this.class_new == "") flg = true;
-		if (isNaN(parseInt(this.count_new)) || parseInt(this.count_new)<=0) flg = true;
+        if (isNaN(parseInt(this.count_new)) || parseInt(this.count_new)<=0) flg = true;
         for (let i in this.classSelected){
-		  console.log(i);
+          console.log(i);
           if (this.classSelected[i]["id"] == this.class_new){
             flg = true;
             break;
           }
-		 }
+         }
         if (!flg)
           this.classSelected.push({"id": this.class_new, "stuMax": parseInt(this.count_new)});
         this.class_new = "";

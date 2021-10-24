@@ -80,11 +80,11 @@ export default {
     rowUserName: undefined,
     tipText: "班级",
     headers: [
-      { text: "学号", value: "id", align: "start", sortable: true },
+      { text: "学号", value: "id", align: "start"},
       { text: "姓名", value: "name" },
-      { text: "校内", value: "inside" },
-      { text: "校外", value: "outside" },
-      { text: "大型", value: "large" },
+      { text: "校内", value: "inside", sortable: false},
+      { text: "校外", value: "outside", sortable: false },
+      { text: "大型", value: "large", sortable: false },
       { text: "完成", value: "finished" },
     ],
   }),
@@ -95,8 +95,17 @@ export default {
     this.pageload();
   },
   methods: {
+    timeToHint: function (a){
+        let hr = parseInt(a / 60);
+        let mi = a % 60;
+        if (hr != 0)
+            return hr + " 小时 " + mi + " 分钟";
+        else
+            return mi + "分钟";
+    },
     async pageload() {
       this.$store.commit("loading", true);
+      await zutils.checkToken(this);
       axios
         .get("/class/list")
         .then((response) => {
@@ -138,12 +147,10 @@ export default {
       await zutils.fetchStudentList(this.nowclass, (stus) => {
         stus ? (this.students = stus) : (this.students = undefined);
       });
-      if (this.students) {
-          for (var i = 0; i < this.students.length; i++) {
-              this.students[i].inside = this.students[i].inside / 60 + "小时" + this.students[i].inside % 60 + "分钟";
-              this.students[i].outside = this.students[i].outside / 60 + "小时" + this.students[i].outside % 60 + "分钟";
-              this.students[i].inside = this.students[i].large / 60 + "小时" + this.students[i].large % 60 + "分钟";
-          }
+      for (let i in this.students){
+        this.students[i].inside = this.timeToHint(this.students[i].inside);
+        this.students[i].outside = this.timeToHint(this.students[i].outside);
+        this.students[i].large = this.timeToHint(this.students[i].large);
       }
       this.$store.commit("loading", false);
     },

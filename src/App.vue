@@ -23,7 +23,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>义工管理系统</v-list-item-title>
-            <v-list-item-subtitle>内测</v-list-item-subtitle>
+            <v-list-item-subtitle>v1.2.1</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -73,7 +73,7 @@
       color="rgba(255,255,255,0.3)"
     >
       <v-col class="text-center" cols="12"
-        >{{ new Date().getFullYear() }} - © mo_yi &amp; Zecyel &amp; fpc7519</v-col
+        >{{ new Date().getFullYear() }} - © mo_yi &amp; Zecyel &amp; fpc5719</v-col
       >
     </v-footer>
   </v-app>
@@ -93,18 +93,24 @@
 }
 </style>
 <script>
+import zutils from "./utils/zutils.js"
 export default {
   name: "App",
   data: () => ({
     activeBtn: 1,
     drawer: true,
     phone: false,
+    vol: undefined
   }),
-  mounted: function () {
+  mounted: async function () {
+    setInterval(this.listen, 30000, this);
   },
   methods: {
     changeColorTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
+    async listen(t) {
+      zutils.checkToken(t);
     },
   },
 };

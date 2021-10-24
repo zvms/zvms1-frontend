@@ -170,13 +170,13 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-		    <v-btn
+            <v-btn
           text
           color="primary"
           @click="submit"
         >
           提交
-		    </v-btn>
+            </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -194,7 +194,7 @@ export default {
     modalTime: false,
     stulst: [],
     stuNew: undefined,
-	mp: {},
+    mp: {},
     form: {
       name: undefined,
       date: undefined,
@@ -214,13 +214,14 @@ export default {
   methods: {
     async pageload() {
       this.$store.commit("loading", true);
+      await zutils.checkToken(this);
       await zutils.fetchStudentList(this.$store.state.info.class, (stulst) => {
         stulst
           ? (this.stulst = stulst)
           : dialogs.toasts.error("获取学生列表失败");
       });
-	  for(let i = 0; i < this.stulst.length; i ++)
-		this.mp[this.stulst[i].id] = this.stulst[i].name;
+      for(let i = 0; i < this.stulst.length; i ++)
+        this.mp[this.stulst[i].id] = this.stulst[i].name;
       this.$store.commit("loading", false);
       console.log(this.stulst);
     },
@@ -244,10 +245,10 @@ export default {
       this.form.stuSelected.splice(i, 1);
     },
     submit: function(){
-	  if (this.form.stuSelected.length == 0){
-	    dialogs.toasts.error("报名学生列表为空");
-		return;
-	  }
+      if (this.form.stuSelected.length == 0){
+        dialogs.toasts.error("报名学生列表为空");
+        return;
+      }
       this.$store.commit("loading", true);
       axios
         .post("/volunteer/holiday",{

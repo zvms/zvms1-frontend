@@ -66,9 +66,9 @@
             <tr>
               <td>感想</td>
               <td><v-textarea
-				        v-model="thought"
+                        v-model="thought"
                 placeholder=""
-			        ></v-textarea></td>
+                    ></v-textarea></td>
             </tr>
           </tbody>
         </v-simple-table>
@@ -90,9 +90,8 @@
 <script>
 import dialogs from "../../utils/dialogs.js";
 import permissions from "../../utils/permissions";
-import volinfo from "../../components/volinfo";
-import zutils from "../../utils/zutils.js";
 import axios from "axios";
+import zutils from "../../utils/zutils";
 
 export default {
   data: () => ({
@@ -119,6 +118,7 @@ export default {
   methods: {
     async pageload() {
       this.$store.commit("loading", true);
+      await zutils.checkToken(this);
       await axios
         .get("/class/noThought/"+this.$store.state.info.class,{
 
@@ -187,7 +187,7 @@ export default {
           console.log(response.data);
           if (response.data.type == "SUCCESS") {
             dialogs.toasts.success(response.data.message);
-			this.pageload();
+            location.reload();
           } else {
             dialogs.toasts.error(response.data.message);
           }
