@@ -43,6 +43,8 @@ export default {
           ]);
           this.$router.push("/login");
           this.$store.commit("loading", false);
+          this.$store.commit("login", false);
+          this.$store.commit("lastSeenVol", []);
         });
     },
   },

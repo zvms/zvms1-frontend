@@ -23,7 +23,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>义工管理系统</v-list-item-title>
-            <v-list-item-subtitle>v1.2.1</v-list-item-subtitle>
+            <v-list-item-subtitle>v1.1.3</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -93,25 +93,26 @@
 }
 </style>
 <script>
-import zutils from "./utils/zutils.js"
+import permissions from "./utils/permissions.js";
+
 export default {
   name: "App",
   data: () => ({
     activeBtn: 1,
     drawer: true,
     phone: false,
-    vol: undefined
+    currentVol: undefined
   }),
   mounted: async function () {
-    setInterval(this.listen, 30000, this);
+  
   },
   methods: {
+    granted: function () {
+      return this.$store.state.info.permission < permissions.teacher;
+    },
     changeColorTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    },
-    async listen(t) {
-      zutils.checkToken(t);
-    },
+    }
   },
 };
 </script>

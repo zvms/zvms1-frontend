@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     pageload: function(){
+      console.log(233);
     },
     submitReport: function(){
       axios

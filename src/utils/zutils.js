@@ -1,4 +1,5 @@
 import Axios from "axios"
+
 export default {
     checkToken: async (con) => {
         await Axios
@@ -9,8 +10,10 @@ export default {
                     { title: '登录', to: '/login', icon: 'mdi-account-circle' },
                     { title: "反馈错误", to: "/report", icon: "mdi-alert" }
                   ]);
-                  con.$store.state.token = undefined;
+                  con.$store.commit("token",undefined);
+                  con.$store.commit("login", false);
                   con.$store.commit("loading", false);
+                  con.$store.commit("lastSeenVol", []);
                   con.$router.push("/login").catch(()=>{});
                 })
               }

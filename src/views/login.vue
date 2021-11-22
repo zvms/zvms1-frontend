@@ -50,7 +50,7 @@ import axios from "axios"; //ajax网络库
 import permissions from "../utils/permissions.js";
 
 var md5=require('md5-node');
-var current_version = "7659efa34712b560a174dd090b605c1c";
+var current_version = "ae8e177f096c97444b63ecf328f0e058";
 // 版本号的加盐的MD5，记得改
 
 export default {
