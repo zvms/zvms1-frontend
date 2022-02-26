@@ -27,7 +27,7 @@
     </v-card-text>
     <v-dialog v-model="dialog" max-width="80%">
       <v-card>
-        <volinfo :volid="volid" />
+        <volcert :volid="volid" :stuid="stuid"/>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="dialog = false">关闭</v-btn>
@@ -39,20 +39,21 @@
 
 <script>
 import dialogs from "../utils/dialogs";
-import volinfo from "./volinfo.vue";
+import volcert from "./volcert.vue";
 import axios from "axios";
 
 export default {
   name: "stuvolist",
   props: ["userid", "title"],
   components: {
-    volinfo,
+    volcert
   },
   data: () => ({
     volworks: undefined,
     dialog: false,
     search: "",
     volid: undefined,
+    stuid: undefined,
     headers: [
       { text: "义工ID", value: "volId", align: "start", sortable: true },
       { text: "义工名称", value: "name" },
@@ -68,14 +69,18 @@ export default {
   methods: {
     timeToHint: function (a){
         let hr = parseInt(a / 60);
-        let mi = a % 60;
+        let mi = parseInt(a % 60);
         if (hr != 0)
-            return hr + " 小时 " + mi + " 分钟";
+            if (mi != 0)
+                return hr + " 小时 " + mi + " 分钟";
+            else
+                return hr + " 小时 ";
         else
             return mi + "分钟";
     },
     init: function () {
       this.volworks = undefined;
+      this.stuid = this.userid;
       if (this.userid != 0 && this.userid != undefined) {
         this.$store.commit("loading", true);
         axios
@@ -101,8 +106,9 @@ export default {
       }
     },
     rowClick: function (item) {
-      this.dialog = true;
       this.volid = item.volId;
+      this.stuid = this.userid;
+      this.dialog = true;
     },
   },
   watch: {

@@ -4,6 +4,7 @@ export default {
     checkToken: async (con) => {
         await Axios
             .post("/user/info").then((msg) => {
+              // console.log(con.$store);
               if (msg["data"]["type"] != "SUCCESS") {
                 Axios.post("/user/logout").finally(() => {
                   con.$store.commit("draweritems", [
@@ -35,7 +36,7 @@ export default {
         await Axios
             .get("/class/stulist/" + classid)
             .then((response) => {
-                console.log(response.data)
+                // console.log(response.data)
                 let stus = response.data.student
                 if (stus)
                     for (var i = 0; i < stus.length; i++) {
@@ -67,7 +68,7 @@ export default {
         let url = classid ? "/class/volunteer/"+classid : "/volunteer/list/";
         await Axios
             .get(url).then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 callback(response.data.volunteer);
             })
             .catch((err) => { console.error(err) })
@@ -76,7 +77,7 @@ export default {
     fetchAllVolunter: async (callback) => {
         await Axios
             .get("/volunteer/list").then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 callback(response.data.volunteer);
             })
             .catch((err) => { console.error(err) })

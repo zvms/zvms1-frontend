@@ -93,23 +93,15 @@
 }
 </style>
 <script>
-import permissions from "./utils/permissions.js";
 
 export default {
   name: "App",
   data: () => ({
     activeBtn: 1,
     drawer: true,
-    phone: false,
-    currentVol: undefined
+    phone: false
   }),
-  mounted: async function () {
-  
-  },
   methods: {
-    granted: function () {
-      return this.$store.state.info.permission < permissions.teacher;
-    },
     changeColorTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }

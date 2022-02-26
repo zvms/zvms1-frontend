@@ -47,7 +47,7 @@
       ></v-data-table>
       <v-dialog v-model="dialog" max-width="80%">
         <v-card>
-          <stuvolist :userid="rowUserId" :title="rowUserName" />
+          <stuvolist v-if="dialog" :userid="rowUserId" :title="rowUserName" />
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialog = false"
@@ -97,9 +97,12 @@ export default {
   methods: {
     timeToHint: function (a){
         let hr = parseInt(a / 60);
-        let mi = a % 60;
+        let mi = parseInt(a % 60);
         if (hr != 0)
-            return hr + " 小时 " + mi + " 分钟";
+            if (mi != 0)
+                return hr + " 小时 " + mi + " 分钟";
+            else
+                return hr + " 小时 ";
         else
             return mi + "分钟";
     },

@@ -50,7 +50,7 @@ import axios from "axios"; //ajax网络库
 import permissions from "../utils/permissions.js";
 
 var md5=require('md5-node');
-var current_version = "ae8e177f096c97444b63ecf328f0e058";
+var current_version = "51141167bd8394d8da590fddaeb3d91e";
 // 版本号的加盐的MD5，记得改
 
 export default {
@@ -65,6 +65,8 @@ export default {
     rules: [NOTEMPTY()], //表单校验规则
     winheight: document.documentElement.clientHeight - 100, //一个比较失败的自动调整大小
   }),
+  mounted: async function () {
+  },
   methods: {
     login() {
       if (this.$refs.form.validate()) {
