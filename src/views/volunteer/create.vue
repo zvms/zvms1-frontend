@@ -6,13 +6,11 @@
         <v-form ref="form">
           <v-text-field
             v-model="form.name"
-            :rules="rules"
             label="义工名称"
             prepend-icon="mdi-pen"
           />
           <v-text-field
             v-model="form.stuMax"
-            :rules="rules"
             label="义工总人数"
             prepend-icon="mdi-account"
           />
@@ -61,6 +59,7 @@
                   <v-text-field
                     v-model.number = "count_new"
                     label = "限制人数"
+                    @keyup.native.enter="addToList"                    
                   >
                   </v-text-field>
                 </td>
@@ -93,7 +92,6 @@
               <v-text-field
                 v-model="form.date"
                 label="义工日期"
-                :rules="rules"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
@@ -127,7 +125,6 @@
                 label="义工时间"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
-                :rules="rules"
                 v-bind="attrs"
                 v-on="on"
               ></v-text-field>
@@ -148,27 +145,26 @@
           </v-dialog>
           <v-text-field
             v-model="form.description"
-            :rules="rules"
             label="义工描述"
             prepend-icon="mdi-text"
           />
           <v-text-field
-            v-model="form.inside"
-            :rules="rules"
+            v-model.number="form.inside"
             label="校内时长（分钟）"
             prepend-icon="mdi-view-list"
+            @keyup.native.enter="createVolunteer"
           />
           <v-text-field
-            v-model="form.outside"
-            :rules="rules"
+            v-model.number="form.outside"
             label="校外时长（分钟）"
             prepend-icon="mdi-view-list"
+            @keyup.native.enter="createVolunteer"
           />
           <v-text-field
-            v-model="form.large"
-            :rules="rules"
+            v-model.number="form.large"
             label="大型时长（分钟）"
             prepend-icon="mdi-view-list"
+            @keyup.native.enter="createVolunteer"
           />
         </v-form>
         <v-card-actions>
@@ -190,7 +186,7 @@
 import dialogs from "../../utils/dialogs";
 import zutils from "../../utils/zutils";
 import axios from "axios";
-import { NOTEMPTY } from "../..//utils/validation.js";
+// import { NOTEMPTY } from "../..//utils/validation.js";
 
 export default {
   data: () => ({
@@ -211,7 +207,7 @@ export default {
       large: undefined,
       class: undefined,
     },
-    rules: [NOTEMPTY()],
+    // rules: [NOTEMPTY()],
     mp: {}
   }),
   components: {},
@@ -232,49 +228,56 @@ export default {
       this.$store.commit("loading", false);
     },
     createVolunteer: function () {
-      if (this.$refs.form.validate()) {
-      // if (true){
-        console.log("创建义工");
-        console.log(this.form);
-        if ((this.form.stuMax != parseInt(this.form.stuMax) || isNaN(parseInt(this.form.stuMax)) || parseInt(this.form.stuMax) <= 0 ||
-            this.form.inside != parseInt(this.form.inside) || isNaN(parseInt(this.form.inside)) || parseInt(this.form.inside) < 0 ||
-            this.form.outside != parseInt(this.form.outside) || isNaN(parseInt(this.form.outside)) || parseInt(this.form.outside) < 0 ||
-            this.form.large != parseInt(this.form.large) || isNaN(parseInt(this.form.large)) || parseInt(this.form.large) < 0) ||
-             (parseInt(this.form.large) == 0 && parseInt(this.form.outside) == 0 && parseInt(this.form.inside) == 0)) {
-                dialogs.toasts.error("数据不合法");
-                return;
-            }
-        this.$store.commit("loading", true);
-        axios
-          .post("/volunteer/create", {
-            name: this.form.name,
-            date: this.form.date,
-            time: this.form.time,
-            stuMax: parseInt(this.form.stuMax),
-            description: this.form.description,
-            inside: parseInt(this.form.inside),
-            outside: parseInt(this.form.outside),
-            large: parseInt(this.form.large),
-            class: this.classSelected,
-          })
-          .then((response) => {
-            console.log(response.data);
-            if (response.data.type == "SUCCESS") {
-              dialogs.toasts.success(response.data.message);
-              for(let k in this.form)
-                this.form[k] = undefined
-            } else {
-              dialogs.toasts.error(response.data.message);
-            }
-          })
-          .catch((err) => {
-            dialogs.toasts.error(err);
-          })
-          .finally(() => {
-            this.$store.commit("loading", false);
-          });
+      dialogs.confirm("",(value)=>{
+        if(!value) return;
+        if (this.$refs.form.validate()) {
+          if ((this.form.name == undefined) || (this.form.name == "")){ dialogs.toasts.error("请输入义工名称"); return; }
+          if ((this.form.description == undefined) || (this.form.description == "")){ dialogs.toasts.error("请输入义工描述"); return; }
+          if ((this.form.stuMax != parseInt(this.form.stuMax)) || isNaN(parseInt(this.form.stuMax)) || parseInt(this.form.stuMax) <= 0){
+              dialogs.toasts.error("请输入总人数"); return;
+          }
+          this.form.inside  = parseInt(this.form.inside);
+          this.form.outside = parseInt(this.form.outside);
+          this.form.large   = parseInt(this.form.large);
+          if (this.form.inside  == undefined || isNaN(this.form.inside)  || this.form.inside  == "") this.form.inside  = 0;
+          if (this.form.outside == undefined || isNaN(this.form.outside) || this.form.outside == "") this.form.outside = 0;
+          if (this.form.large   == undefined || isNaN(this.form.large)   || this.form.large   == "") this.form.large   = 0;
+          if ((this.form.inside == 0) && (this.form.outside == 0) && (this.form.large == 0)){
+              dialogs.toasts.error("义工时间不能同时为0"); return;
+          }
+          
+          this.$store.commit("loading", true);
+          axios
+            .post("/volunteer/create", {
+              name: this.form.name,
+              date: this.form.date,
+              time: this.form.time,
+              stuMax: parseInt(this.form.stuMax),
+              description: this.form.description,
+              inside: parseInt(this.form.inside),
+              outside: parseInt(this.form.outside),
+              large: parseInt(this.form.large),
+              class: this.classSelected,
+            })
+            .then((response) => {
+              console.log(response.data);
+              if (response.data.type == "SUCCESS") {
+                dialogs.toasts.success(response.data.message);
+                for(let k in this.form) this.form[k] = undefined;
+                this.classSelected = [];
+              } else {
+                dialogs.toasts.error(response.data.message);
+              }
+            })
+            .catch((err) => {
+              dialogs.toasts.error(err);
+            })
+            .finally(() => {
+              this.$store.commit("loading", false);
+            });
         }
-      },
+      });
+    },
       addToList: function (){
         let flg = false;
         if (this.class_new == "") flg = true;
