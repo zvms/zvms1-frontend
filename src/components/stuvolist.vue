@@ -27,7 +27,7 @@
     </v-card-text>
     <v-dialog v-model="dialog" max-width="80%">
       <v-card>
-        <volcert :volid="volid" :stuid="stuid"/>
+        <volcert :volid="volid" :stuid="stuid" :stuname="stuname"/>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="dialog = false">关闭</v-btn>
@@ -54,6 +54,7 @@ export default {
     search: "",
     volid: undefined,
     stuid: undefined,
+    stuname: undefined,
     headers: [
       { text: "义工ID", value: "volId", align: "start", sortable: true },
       { text: "义工名称", value: "name" },
@@ -108,6 +109,7 @@ export default {
     rowClick: function (item) {
       this.volid = item.volId;
       this.stuid = this.userid;
+      this.stuname = this.title;
       this.dialog = true;
     },
   },
