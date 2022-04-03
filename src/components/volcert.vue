@@ -1,15 +1,24 @@
 <template>
   <v-card flat :loading="$store.state.isLoading">
-    <v-card-title align="center">义工完成证明</v-card-title>
+    <v-layout column align-center>
+    <v-card-title v-if="stu.status == 1">义工完成证明</v-card-title>
+    <v-card-title v-if="stu.status != 1">义工详细信息</v-card-title>
+    </v-layout>
       <v-container fluid>
-        <v-row dense>
+        <div v-if="toggled == false && stu.status == 1" @click="flipcard()">
+        <p class="cert">{{ stuname }}同学已于{{ formalDate(vol.date) }} {{formalTime(vol.time) }}完成名为“{{ vol.name }}”的义工活动，预计获得校内义工时长{{ timeToHint(vol.inside) }}，校外义工时长{{ timeToHint(vol.outside) }}，大型义工时长{{ timeToHint(vol.large) }}。</p>
+        <p class="cert">经由团支部评定及感想审核，决定给予{{ stuname }}同学校内义工时长{{ timeToHint(stu.inside) }}，校外义工时长{{ timeToHint(stu.outside) }}，大型义工时长{{ timeToHint(stu.large) }}。</p>
+        <p class="cert">特此证明</p>
+        <p class="signature">镇海中学 团委</p>
+        <p class="signature">镇海中学 学生会实践部</p>
+        <p class="signature">镇海中学 义管会</p>
+        <p class="signature">{{ formalDate(vol.date) }}</p>
+        <v-img src="../../public/stamp.png" height="150px" width="150px" />
+        </div>
+        <v-row dense v-if="toggled == true || stu.status != 1" @click="flipcard()">
         <v-col :cols="6">
           <v-simple-table>
             <tbody>
-              <tr>
-                <td>义工编号</td>
-                <td>{{ vol.id }}</td>
-              </tr>
               <tr>
                 <td>义工名称</td>
                 <td>{{ vol.name }}</td>
@@ -49,6 +58,10 @@
                 <td>{{ stu.id }}</td>
               </tr>
               <tr>
+                <td>学生姓名</td>
+                <td>{{ stuname }}</td>
+              </tr>
+              <tr>
                 <td>学生感想</td>
                 <td>{{ stu.thought }}</td>
               </tr>
@@ -72,14 +85,6 @@
                   </v-chip>
                 </td>
               </tr>
-              <tr v-if="stu.status==1">
-                <td></td>
-                <td><v-img
-                  src="../../public/stamp.png"
-                  height="150px"
-                  width="150px"
-                /></td>
-              </tr>
             </tbody>
           </v-simple-table>
         </v-col>
@@ -88,14 +93,28 @@
   </v-card>
 </template>
 
+<style>
+p.cert {
+    text-indent: 2em;
+    line-height: 2.5;
+    font-family: "仿宋";
+}
+p.signature {
+    text-align: right;
+    line-height: 2.5;
+    font-family: "仿宋";
+}
+</style>
+
 <script>
 import dialogs from "../utils/dialogs";
 import axios from "axios";
 
 export default {
   name: "volcert",
-  props: ["volid","stuid"],
+  props: ["volid","stuid","stuname"],
   data: () => ({
+    toggled: false,
     vol: {
       id: undefined,
       name: "加载中...",
@@ -148,6 +167,20 @@ export default {
         if (a==3) return "white";
         return "black";
     },
+    formalDate: function (date) {
+        let y = date.slice(0,4);
+        let m = date.slice(5,7);
+        let d = date.slice(8,10);
+        return parseInt(y)+"年"+parseInt(m)+"月"+parseInt(d)+"日";
+    },
+    formalTime: function (time){
+        let hr = time.slice(0,2);
+        let mn = time.slice(3,5);
+        return parseInt(hr)+"时"+parseInt(mn)+"分";
+    },
+    flipcard: function (){
+        this.toggled = !this.toggled;
+    },
     init: function () {
       if (this.volid != 0 && this.volid != undefined
           && this.stuid != 0 && this.stuid != undefined) {
@@ -171,6 +204,11 @@ export default {
           });
       }
     },
+  },
+  watch: {
+    volid: function () { this.init(); },
+    stuid: function () { this.init(); },
+    stuname: function () { this.init(); },
   },
 };
 </script>
