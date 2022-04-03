@@ -9,11 +9,13 @@
         <p class="cert">{{ stuname }}同学已于{{ formalDate(vol.date) }} {{formalTime(vol.time) }}完成名为“{{ vol.name }}”的义工活动，预计获得校内义工时长{{ timeToHint(vol.inside) }}，校外义工时长{{ timeToHint(vol.outside) }}，大型义工时长{{ timeToHint(vol.large) }}。</p>
         <p class="cert">经由团支部评定及感想审核，决定给予{{ stuname }}同学校内义工时长{{ timeToHint(stu.inside) }}，校外义工时长{{ timeToHint(stu.outside) }}，大型义工时长{{ timeToHint(stu.large) }}。</p>
         <p class="cert">特此证明</p>
-        <p class="signature">镇海中学 团委</p>
-        <p class="signature">镇海中学 学生会实践部</p>
-        <p class="signature">镇海中学 义管会</p>
-        <p class="signature">{{ formalDate(vol.date) }}</p>
+        <v-layout column align-end>
+        <p class="cert">镇海中学 团委</p>
+        <p class="cert">镇海中学 学生会实践部</p>
+        <p class="cert">镇海中学 义管会</p>
+        <p class="cert">{{ formalDate(vol.date) }}</p>
         <v-img src="../../public/stamp.png" height="150px" width="150px" />
+        </v-layout>
         </div>
         <v-row dense v-if="toggled == true || stu.status != 1" @click="flipcard()">
         <v-col :cols="6">
@@ -96,12 +98,8 @@
 <style>
 p.cert {
     text-indent: 2em;
-    line-height: 2.5;
-    font-family: "仿宋";
-}
-p.signature {
-    text-align: right;
-    line-height: 2.5;
+    line-height: 2;
+    font-size: 18px;
     font-family: "仿宋";
 }
 </style>
