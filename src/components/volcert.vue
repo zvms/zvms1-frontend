@@ -1,13 +1,14 @@
 <template>
   <v-card flat :loading="$store.state.isLoading">
     <v-layout column align-center>
-    <v-card-title v-if="stu.status == 1">义工完成证明</v-card-title>
-    <v-card-title v-if="stu.status != 1">义工详细信息</v-card-title>
+    <v-card-title v-if="toggled == false && stu.status == 1"><span class="cert-header">义工完成证明</span></v-card-title>
+    <v-card-title v-if="toggled == true || stu.status  != 1">{{ vol.name }}</v-card-title>
     </v-layout>
+    <v-card-text v-if="toggled == true || stu.status  != 1">{{ vol.description }}</v-card-text>
       <v-container fluid>
         <div v-if="toggled == false && stu.status == 1" @click="flipcard()">
-        <p class="cert">{{ stuname }}同学已于{{ formalDate(vol.date) }} {{formalTime(vol.time) }}完成名为“{{ vol.name }}”的义工活动，预计获得校内义工时长{{ timeToHint(vol.inside) }}，校外义工时长{{ timeToHint(vol.outside) }}，大型义工时长{{ timeToHint(vol.large) }}。</p>
-        <p class="cert">经由团支部评定及感想审核，决定给予{{ stuname }}同学校内义工时长{{ timeToHint(stu.inside) }}，校外义工时长{{ timeToHint(stu.outside) }}，大型义工时长{{ timeToHint(stu.large) }}。</p>
+        <p class="cert"><span class="stress">{{ stuname }}</span>同学已于<span class="stress">{{ formalDate(vol.date) }} {{formalTime(vol.time) }}</span>完成名为<span class="stress">{{ vol.name }}</span>的义工活动，预计获得校内义工时长<span class="stress">{{ timeToHint(vol.inside) }}</span>，校外义工时长<span class="stress">{{ timeToHint(vol.outside) }}</span>，大型义工时长<span class="stress">{{ timeToHint(vol.large) }}。</span></p>
+        <p class="cert">经由团支部评定及感想审核，决定给予<span class="stress">{{ stuname }}</span>同学校内义工时长<span class="stress">{{ timeToHint(stu.inside) }}</span>，校外义工时长<span class="stress">{{ timeToHint(stu.outside) }}</span>，大型义工时长<span class="stress">{{ timeToHint(stu.large) }}</span>。</p>
         <p class="cert">特此证明</p>
         <v-layout column align-end>
         <p class="cert">镇海中学 团委</p>
@@ -17,18 +18,11 @@
         <v-img src="../../public/stamp.png" height="150px" width="150px" />
         </v-layout>
         </div>
-        <v-row dense v-if="toggled == true || stu.status != 1" @click="flipcard()">
+        <div v-if="toggled == true || stu.status != 1" @click="flipcard()">
+        <v-row dense>
         <v-col :cols="6">
           <v-simple-table>
             <tbody>
-              <tr>
-                <td>义工名称</td>
-                <td>{{ vol.name }}</td>
-              </tr>
-              <tr>
-                <td>义工信息</td>
-                <td>{{ vol.description }}</td>
-              </tr>
               <tr>
                 <td>义工日期</td>
                 <td>{{ vol.date }}</td>
@@ -38,15 +32,15 @@
                 <td>{{ vol.time }}</td>
               </tr>
               <tr>
-                <td>校内时长</td>
+                <td>预计校内时长</td>
                 <td>{{ timeToHint(vol.inside) }}</td>
               </tr>
               <tr>
-                <td>校外时长</td>
+                <td>预计校外时长</td>
                 <td>{{ timeToHint(vol.outside) }}</td>
               </tr>
               <tr>
-                <td>大型时长</td>
+                <td>预计大型时长</td>
                 <td>{{ timeToHint(vol.large) }}</td>
               </tr>
             </tbody>
@@ -56,28 +50,8 @@
           <v-simple-table>
             <tbody>
               <tr>
-                <td>学生编号</td>
-                <td>{{ stu.id }}</td>
-              </tr>
-              <tr>
                 <td>学生姓名</td>
                 <td>{{ stuname }}</td>
-              </tr>
-              <tr>
-                <td>学生感想</td>
-                <td>{{ stu.thought }}</td>
-              </tr>
-              <tr>
-                <td>实际获得校内时长</td>
-                <td>{{ timeToHint(stu.inside) }}</td>
-              </tr>
-              <tr>
-                <td>实际获得校外时长</td>
-                <td>{{ timeToHint(stu.outside) }}</td>
-              </tr>
-              <tr>
-                <td>实际获得大型时长</td>
-                <td>{{ timeToHint(stu.large) }}</td>
               </tr>
               <tr>
                 <td>完成状态</td>
@@ -87,15 +61,50 @@
                   </v-chip>
                 </td>
               </tr>
+              <tr>
+                <td>发放校内时长</td>
+                <td>{{ timeToHint(stu.inside) }}</td>
+              </tr>
+              <tr>
+                <td>发放校外时长</td>
+                <td>{{ timeToHint(stu.outside) }}</td>
+              </tr>
+              <tr>
+                <td>发放大型时长</td>
+                <td>{{ timeToHint(stu.large) }}</td>
+              </tr>
             </tbody>
           </v-simple-table>
         </v-col>
         </v-row>
+        <blockquote>
+        <pre v-for="i in stu.thought.split('\n')">{{  i }}</pre>
+        </blockquote>
+        </div>
       </v-container>
   </v-card>
 </template>
 
 <style>
+pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-break: normal;
+    word-wrap: break-word;
+    font-family: "微软雅黑";
+    text-indent: 2em;
+}
+.stress {
+    font-size: 25px;
+    font-family: "楷体";
+    font-weight: normal;
+}
+.cert-header {
+    font-size: 30px;
+    font-family: "宋体";
+    font-weight: bold;
+}
 p.cert {
     text-indent: 2em;
     line-height: 2;
@@ -141,9 +150,9 @@ export default {
         let mi = parseInt(a % 60);
         if (hr != 0)
             if (mi != 0)
-                return hr + " 小时 " + mi + " 分钟";
+                return hr + "小时" + mi + "分钟";
             else
-                return hr + " 小时 ";
+                return hr + "小时";
         else
             return mi + "分钟";
     },
@@ -180,6 +189,7 @@ export default {
         this.toggled = !this.toggled;
     },
     init: function () {
+      this.toggled = false;
       if (this.volid != 0 && this.volid != undefined
           && this.stuid != 0 && this.stuid != undefined) {
         this.$store.commit("loading", true);
