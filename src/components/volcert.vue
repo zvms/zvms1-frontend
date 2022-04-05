@@ -77,9 +77,7 @@
           </v-simple-table>
         </v-col>
         </v-row>
-        <blockquote>
-        <pre v-for="i in stu.thought.split('\n')">{{  i }}</pre>
-        </blockquote>
+        <pre v-for="i in stu.thought.split('\n')" v-bind:key="i">{{ i }}</pre>
         </div>
       </v-container>
   </v-card>
