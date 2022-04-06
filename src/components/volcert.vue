@@ -4,7 +4,6 @@
     <v-card-title v-if="toggled == false && stu.status == 1"><span class="cert-header">义工完成证明</span></v-card-title>
     <v-card-title v-if="toggled == true || stu.status  != 1">{{ vol.name }}</v-card-title>
     </v-layout>
-    <v-card-text v-if="toggled == true || stu.status  != 1">{{ vol.description }}</v-card-text>
       <v-container fluid>
         <div v-if="toggled == false && stu.status == 1" @click="flipcard()">
         <p class="cert"><span class="stress">{{ stuname }}</span>同学已于<span class="stress">{{ formalDate(vol.date) }} {{formalTime(vol.time) }}</span>完成名为<span class="stress">{{ vol.name }}</span>的义工活动，预计获得校内义工时长<span class="stress">{{ timeToHint(vol.inside) }}</span>，校外义工时长<span class="stress">{{ timeToHint(vol.outside) }}</span>，大型义工时长<span class="stress">{{ timeToHint(vol.large) }}。</span></p>
@@ -19,72 +18,43 @@
         </v-layout>
         </div>
         <div v-if="toggled == true || stu.status != 1" @click="flipcard()">
-        <v-row dense>
-        <v-col :cols="6">
-          <v-simple-table>
-            <tbody>
-              <tr>
-                <td>义工日期</td>
-                <td>{{ vol.date }}</td>
-              </tr>
-              <tr>
-                <td>义工时间</td>
-                <td>{{ vol.time }}</td>
-              </tr>
-              <tr>
-                <td>预计校内时长</td>
-                <td>{{ timeToHint(vol.inside) }}</td>
-              </tr>
-              <tr>
-                <td>预计校外时长</td>
-                <td>{{ timeToHint(vol.outside) }}</td>
-              </tr>
-              <tr>
-                <td>预计大型时长</td>
-                <td>{{ timeToHint(vol.large) }}</td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+        <v-row>
+        <v-col :cols="8">
+          <fieldset>
+            <legend>义工描述</legend>
+            <pre v-for="i in vol.description.split('\n')" v-bind:key="i">{{ i }}</pre>
+          </fieldset>
         </v-col>
-        <v-col :cols="6">
-          <v-simple-table>
-            <tbody>
-              <tr>
-                <td>学生姓名</td>
-                <td>{{ stuname }}</td>
-              </tr>
-              <tr>
-                <td>完成状态</td>
-                <td>
-                  <v-chip :color="stColor(stu.status)" :text-color="stColorT(stu.status)">
-                    {{ statusToStr(stu.status) }}
-                  </v-chip>
-                </td>
-              </tr>
-              <tr>
-                <td>发放校内时长</td>
-                <td>{{ timeToHint(stu.inside) }}</td>
-              </tr>
-              <tr>
-                <td>发放校外时长</td>
-                <td>{{ timeToHint(stu.outside) }}</td>
-              </tr>
-              <tr>
-                <td>发放大型时长</td>
-                <td>{{ timeToHint(stu.large) }}</td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+        <v-divider class="mx-4" vertical></v-divider>
+        <v-col style="line-height:2.5;">
+          <v-chip color="primary"> {{ formalDate(vol.date) }} </v-chip>
+          <v-chip color="primary"> {{ formalTime(vol.time) }} </v-chip>
+          <v-chip color="primary"> {{ stu.id }} </v-chip>
+          <v-chip color="primary"> {{ stuname }} </v-chip>
+          <v-chip :color="stColor(stu.status)" :text-color="stColorT(stu.status)">
+            {{ statusToStr(stu.status) }}
+          </v-chip>
         </v-col>
         </v-row>
-        <pre v-for="i in stu.thought.split('\n')" v-bind:key="i">{{ i }}</pre>
+        <fieldset v-if="haveThought()">
+          <legend>学生感想</legend>
+          <pre v-for="i in stu.thought.split('\n')" v-bind:key="i">{{ i }}</pre>
+        </fieldset>
         </div>
       </v-container>
   </v-card>
 </template>
 
 <style>
+fieldset {
+    border: 2px solid #92BAEE;
+    border-radius: 10px;
+}
+legend {
+    margin:0 0 0 30px;
+}
 pre {
+    margin: 15px;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -o-pre-wrap;
@@ -185,6 +155,9 @@ export default {
     },
     flipcard: function (){
         this.toggled = !this.toggled;
+    },
+    haveThought: function (){
+        return this.stu.thought.length>0;
     },
     init: function () {
       this.toggled = false;
