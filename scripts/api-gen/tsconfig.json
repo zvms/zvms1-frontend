@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ES6",
+        "moduleResolution": "node"
+    },
+    "include": [
+        "./index.ts",
+        "./types.d.ts",
+        "./typeGen.ts",
+        "./src/"
+    ],
+    "exclude": [
+        "./gen/"
+    ]
+}
