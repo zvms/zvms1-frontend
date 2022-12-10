@@ -95,6 +95,7 @@ export default {
       };
       this.init();
     },
+    timeToHint,
   },
   watch: {
     volid () {
