@@ -9,6 +9,8 @@ export enum permissionTypes {
 }
 
 export const permissionNames = {
+    [permissionTypes.none]:"未登录！",
+    [permissionTypes.logined]:"用户",
     [permissionTypes.secretary]: "团支书",
     [permissionTypes.teacher]: "教师",
     [permissionTypes.admin]: "管理员",

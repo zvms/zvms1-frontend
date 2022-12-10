@@ -7,16 +7,16 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import {checkToken} from "../apis";
 export default {
   name: "home",
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
     pageload: async function(){
-      await checkToken(this.$store);
+      await checkToken();
       this.$router.push("/me");
     }
   },

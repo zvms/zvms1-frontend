@@ -107,6 +107,6 @@ export function getNavItems(permission:permissionTypes) {
 }
 
 export function applyNavItems() {
-    console.log(useInfoStore().permission);
-    return useDrawerStore().items = getNavItems(useInfoStore().permission || permissionTypes.none);
+    console.log(this.infoStore.permission);
+    return useDrawerStore().items = getNavItems(this.infoStore.permission || permissionTypes.none);
 }

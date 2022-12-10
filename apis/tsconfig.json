@@ -6,12 +6,6 @@
         "module": "ESNext"
     },
     "include": [
-        "./index.ts",
-        "./types.d.ts",
-        "./typeGen.ts",
-        "./src/"
-    ],
-    "exclude": [
-        "./gen/"
+        "./"
     ]
 }

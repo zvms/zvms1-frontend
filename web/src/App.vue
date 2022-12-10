@@ -30,7 +30,7 @@
 
       <template v-slot:append>
         <div class="pa-3">
-          <v-progress-circular color="white" indeterminate v-show="$store.state.isLoading"></v-progress-circular>
+          <v-progress-circular color="white" indeterminate v-show="isLoading"></v-progress-circular>
         </div>
         <div class="pa-4">
           <v-icon @click="changeColorTheme" color="white" style="-webkit-app-region: no-drag; margin-right: 0">
@@ -63,12 +63,13 @@
 }
 </style>
 
-<script>
+<script lang="ts">
 //import { RouterLink, RouterView } from 'vue-router'
 import { fApi, checkToken } from "./apis";
-import {toasts} from "./utils/dialogs.js";
+import { toasts } from "./utils/dialogs.js";
 import { permissionTypes } from "./utils/permissions.js";
 import { applyNavItems } from "./utils/nav";
+import { useNoticesStore } from "./stores";
 
 export default {
   name: "App",
@@ -82,7 +83,7 @@ export default {
 
   async mounted() {
     this.vol = await fApi.fetchAllVolunter();
-    this.$store.commit('notices', await fApi.fetchNotices());
+    useNoticesStore().notices = await fApi.fetchNotices();
     applyNavItems(this.$store);
     setInterval(this.listen, 60000, this);
   },
@@ -93,7 +94,7 @@ export default {
     },
 
     async fetchVol() {
-      if (this.$store.state.info.permission < permissionTypes.teacher) {
+      if (this.infoStore.permission < permissionTypes.teacher) {
         await this.fetchCurrentClassVol();
       } else {
         await this.fetchAllVol();
@@ -101,7 +102,7 @@ export default {
     },
 
     async fetchCurrentClassVol() {
-      let volworks = await fApi.fetchClassVolunter(this.$store.state.info.class);
+      let volworks = await fApi.fetchClassVolunter(this.infoStore.class);
       volworks
         ? (this.currentVol = volworks)
         : toasts.error("获取义工列表失败");
@@ -124,7 +125,7 @@ export default {
       storeSaver.saveState(this);
       await checkToken(t);
       await t.fetchVol();
-      t.$store.commit('notices', await fApi.fetchNotices())
+      useNoticesStore().notices =  await fApi.fetchNotices();
       let flag = false;
       let last = t.$store.state.lastSeenVol;
       let vol = t.currentVol;

@@ -1,5 +1,5 @@
-import { Part } from "../types";
-import { arr, str, int, obj, bool} from "../typeGen";
+import { Part } from "zvms-api-gen/types";
+import { arr, str, int, obj, bool} from "zvms-types-gen";
 export const volunteer: Part = {
     desc: "义工活动相关",
     paths: {

@@ -1,9 +1,9 @@
 {
-  "name": "zvms-api",
+  "name": "zvms-apis-gen",
   "version": "1.0.0",
   "description": "Apis and pyi&dts file generator",
-  "main": "index.js",
-  "module": "true",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
     "gen": "ts-node index.ts --files",
     "dev": "nodemon --exec npm run gen -e js,ts -i ./gen"
@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@types/prettier": "^2.7.1",
-    "prettier": "^2.8.0"
+    "prettier": "^2.8.0",
+    "zvms-apis-data": "link:../../apis",
+    "zvms-types-gen": "link:../types-gen"
   }
 }

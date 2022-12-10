@@ -82,7 +82,7 @@
           <v-text-field v-model="form.large" label="大型时长（分钟）" prepend-icon="mdi-view-list" />
         </v-form>
         <v-card-actions>
-          <v-btn color="primary" block :disabled="$store.state.isLoading" @click="createVolunteer">创建义工</v-btn>
+          <v-btn color="primary" block @click="createVolunteer">创建义工</v-btn>
         </v-card-actions>
       </v-card-text>
     </v-card>
@@ -90,7 +90,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import { toasts } from "../../utils/dialogs";
 import { fApi, checkToken } from "../../apis";
 import { NOTEMPTY } from "../../utils/validation.js";
@@ -118,13 +118,12 @@ export default {
     mp: {}
   }),
   components: {},
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
     async pageload() {
-
-      await checkToken(this);
+      await checkToken();
       let classes = await fApi.fetchClassList();
       classes
         ? (this.classes = classes)
@@ -186,7 +185,7 @@ export default {
         this.$router.push('/me');
       }
     },
-    addToList: function () {
+    addToList () {
       let flg = false;
       if (this.class_new == "") flg = true;
       if (isNaN(parseInt(this.count_new)) || parseInt(this.count_new) <= 0) flg = true;
@@ -202,10 +201,10 @@ export default {
       this.class_new = "";
       this.count_new = 0;
     },
-    delFromList: function (i) {
+    delFromList (i) {
       this.classSelected.splice(i, 1);
     }
-  },
+  }
 };
 </script>
 

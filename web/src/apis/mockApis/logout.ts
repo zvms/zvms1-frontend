@@ -12,7 +12,7 @@ export async function logout() {
     }
     toasts.success(res.data.message);
 
-    useInfoStore().$reset();
+    this.infoStore.$reset();
     useLastseenvolStore().$reset();
 
     router.push("/login");

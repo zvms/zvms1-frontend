@@ -4,7 +4,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { logout } from "../apis";
 
 export default {

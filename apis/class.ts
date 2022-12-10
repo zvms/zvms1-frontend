@@ -1,5 +1,5 @@
-import { Part } from "../types";
-import { arr, obj, int, str } from "../typeGen";
+import { Part } from "zvms-api-gen/types";
+import { arr, obj, int, str } from "zvms-types-gen";
 export const class2: Part = {
     desc: "班级相关",
     paths: {

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat :loading="$store.state.isLoading">
+  <v-card flat>
     <v-card-title>
       {{ vol.name }}
     </v-card-title>
@@ -46,7 +46,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { fApi } from "../apis";
 export default {
   name: "volinfo",
@@ -67,11 +67,11 @@ export default {
       large: undefined,
     },
   }),
-  created: function () {
+  created () {
     this.init();
   },
   methods: {
-    timeToHint: function (a) {
+    timeToHint (a) {
       let hr = parseInt(a / 60);
       let mi = parseInt(a % 60);
       if (hr != 0)
@@ -87,7 +87,7 @@ export default {
         this.vol = await fApi.fetchOneVolunteer(this.volid);
       }
     },
-    fetch: function () {
+    fetch () {
       this.vol = {
         type: undefined,
         message: undefined,
@@ -106,7 +106,7 @@ export default {
     },
   },
   watch: {
-    volid: function () {
+    volid () {
       this.fetch();
     },
   },

@@ -1,4 +1,4 @@
-import * as api from "./apis";
+import * as api from "zvms-apis-data";
 import { Api } from "./types";
 import { mkdirSync, rmSync, writeFileSync } from "fs";
 import { tsPath } from "./src/ts/path";

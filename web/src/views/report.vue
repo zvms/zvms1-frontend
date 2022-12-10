@@ -12,7 +12,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import { toasts } from "../utils/dialogs";
 import { NOTEMPTY } from "../utils/validation";
 import { fApi } from "../apis";
@@ -23,11 +23,11 @@ export default {
     report: undefined,
     rules: [NOTEMPTY()]
   }),
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
-    pageload: function () {
+    pageload () {
     },
     submitReport: async function () {
       let data = await fApi.sendReport(this.report)

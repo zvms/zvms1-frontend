@@ -4,7 +4,7 @@
       <v-card-title>
         你好,
         <v-card-text>
-          {{ $store.state.info.username }}
+          {{ infoStore.username }}
           <v-chip v-for="chip in chips" v-bind:key="chip.id">
             <v-icon left>{{ chip.icon }}</v-icon>
             {{ chip.content }}
@@ -72,14 +72,16 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import { useInfoStore } from "@/stores";
+import { VContainer, VCard, VCardTitle, VCardText, VChip, VIcon, VList, VListItem, VListItemTitle, VListItemSubtitle, VDialog } from "vuetify/lib/components";
 import {fApi, checkToken} from "../apis";
 import {permissionNames} from "../utils/permissions";
 
 export default {
   name: "me",
   data: () => ({
-    chips: [],
+    chips: [] as any[],
     thought: {
       stuName: undefined,
       stuId: undefined,
@@ -91,23 +93,23 @@ export default {
     curNoticeText: "",
     timer: undefined
   }),
-  mounted: function () {
+  mounted () {
     this.initChips();
     // this.randomThought();
   },
   methods: {
     pageload: async function () {
-      await checkToken(this.$store);
+      await checkToken();
     },
-    initChips: function () {
+    initChips () {
       this.chips = [
         {
           id: 1,
           icon: "mdi-label",
-          content: permissionNames[this.$store.state.info.permission],
+          content: permissionNames[this.infoStore.permission],
         },
-        { id: 2, icon: "mdi-label", content: this.$store.state.info.classname },
-        { id: 3, icon: "mdi-label", content: this.$store.state.info.class },
+        { id: 2, icon: "mdi-label", content: this.infoStore.classname },
+        { id: 3, icon: "mdi-label", content: this.infoStore.class },
       ];
     },
     randomThought: async function () {
@@ -127,6 +129,7 @@ export default {
       this.curNoticeText = s;
     }
   },
+  
 };
 </script>
 

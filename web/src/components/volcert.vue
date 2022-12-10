@@ -1,5 +1,5 @@
 <template>
-  <v-card flat :loading="$store.state.isLoading">
+  <v-card flat>
     <v-layout column align-center>
       <v-card-title v-if="toggled == false && stu.status == 1"><span class="cert-header">义工完成证明</span></v-card-title>
       <v-card-title v-if="toggled == true || stu.status != 1">{{ vol.name }}</v-card-title>
@@ -93,7 +93,7 @@ p.cert {
 }
 </style>
   
-<script>
+<script lang="ts">
 import { fApi } from "../apis";
 import { toasts } from "../utils/dialogs";
 
@@ -121,54 +121,43 @@ export default {
       large: undefined,
     },
   }),
-  created: function () {
+  created () {
     this.init();
   },
   methods: {
-    timeToHint: function (a) {
-      let hr = parseInt(a / 60);
-      let mi = parseInt(a % 60);
-      if (hr != 0)
-        if (mi != 0)
-          return hr + "小时" + mi + "分钟";
-        else
-          return hr + "小时";
-      else
-        return mi + "分钟";
-    },
-    statusToStr: function (a) {
+    statusToStr (a) {
       if (a == 1) return "通过";
       if (a == 2) return "打回，不可重新提交";
       if (a == 3) return "打回，可以重新提交";
       return "等待审核";
     },
-    stColor: function (a) {
+    stColor (a) {
       if (a == 1) return "green";
       if (a == 2) return "red";
       if (a == 3) return "orange";
       return "";
     },
-    stColorT: function (a) {
+    stColorT (a) {
       if (a == 1) return "white";
       if (a == 2) return "white";
       if (a == 3) return "white";
       return "black";
     },
-    formalDate: function (date) {
+    formalDate (date) {
       let y = date.slice(0, 4);
       let m = date.slice(5, 7);
       let d = date.slice(8, 10);
       return parseInt(y) + "年" + parseInt(m) + "月" + parseInt(d) + "日";
     },
-    formalTime: function (time) {
+    formalTime (time) {
       let hr = time.slice(0, 2);
       let mn = time.slice(3, 5);
       return parseInt(hr) + "时" + parseInt(mn) + "分";
     },
-    flipcard: function () {
+    flipcard () {
       this.toggled = !this.toggled;
     },
-    haveThought: function () {
+    haveThought () {
       return this.stu.thought.length > 0;
     },
     init: async function () {
@@ -187,9 +176,9 @@ export default {
     },
   },
   watch: {
-    volid: function () { this.init(); },
-    stuid: function () { this.init(); },
-    stuname: function () { this.init(); },
+    volid () { this.init(); },
+    stuid () { this.init(); },
+    stuname () { this.init(); },
   },
 };
 </script>

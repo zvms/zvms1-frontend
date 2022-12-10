@@ -54,37 +54,40 @@
                 </v-date-picker>
             </v-dialog>
             <v-card-actions>
-                <v-btn color="primary" block :disabled="$store.state.isLoading" @click="send">发送消息</v-btn>
+                <v-btn color="primary" block @click="send">发送消息</v-btn>
             </v-card-actions>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { toasts } from "../utils/dialogs";
 import { fApi, checkToken } from "../apis";
 import { NOTEMPTY } from "../utils/validation";
+import { mapIsLoading } from "@/stores";
 
 export default {
-    data: () => ({
-        form: {
-            title: undefined,
-            message: undefined,
-            date: undefined
-        },
-        users: undefined,
-        target_new: undefined,
-        userSelected: [],
-        mp: {},
-        modalDate: false,
-        rules: [NOTEMPTY()]
-    }),
-    mounted: function () {
+    data() {
+        return {
+            form: {
+                title: undefined,
+                message: undefined,
+                date: undefined
+            },
+            users: undefined,
+            target_new: undefined,
+            userSelected: [],
+            mp: {},
+            modalDate: false,
+            rules: [NOTEMPTY()]
+        }
+    },
+    mounted () {
         this.pageload()
     },
     methods: {
         async pageload() {
-            await checkToken(this);
+            await checkToken();
             let users = await fApi.fetchClassList();
             users
                 ? (this.users = users)
@@ -95,7 +98,7 @@ export default {
                 this.mp[cls.id] = cls.name;
 
         },
-        addToList: function () {
+        addToList () {
             let flg = false;
             if (this.target_new == "") flg = true;
             for (const user of this.userSelected) {
@@ -108,7 +111,7 @@ export default {
                 this.userSelected.push(this.target_new);
             this.target_new = "";
         },
-        delFromList: function (i) {
+        delFromList (i) {
             this.userSelected.splice(i, 1);
         },
         send: async function () {
@@ -137,6 +140,9 @@ export default {
                 toasts.error(data.message);
             }
         }
+    },
+    computed:{
+        ...mapIsLoading()
     }
 }
 </script>

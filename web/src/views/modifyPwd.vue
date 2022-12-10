@@ -14,7 +14,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import { toasts } from "../utils/dialogs";
 import { checkToken, fApi } from "../apis"
 
@@ -25,12 +25,12 @@ export default {
     pwd_new: undefined,
     pwd_conf: undefined
   }),
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
     pageload: async function () {
-      await checkToken(this);
+      await checkToken();
     },
     modifyPwd: async function () {
       if (this.pwd_new != this.pwd_conf) {

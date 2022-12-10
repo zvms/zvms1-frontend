@@ -24,8 +24,8 @@
       <v-text-field v-model="search" append-icon="mdi-magnify" label="搜索" single-line hide-details></v-text-field>
     </v-card-title>
     <v-card-text>
-      <v-data-table fixed-header :headers="headers" :items="students" :search="search" :loading="$store.state.isLoading"
-        @click:row="rowClick" loading-text="加载中..." no-data-text="没有数据哦，请选择班级" no-results-text="没有结果"></v-data-table>
+      <v-data-table fixed-header :headers="headers" :items="students" :search="search" @click:row="rowClick"
+        loading-text="加载中..." no-data-text="没有数据哦，请选择班级" no-results-text="没有结果"></v-data-table>
       <v-dialog v-model="dialog" max-width="80%">
         <v-card>
           <stuvolist :userid="rowUserId" :title="rowUserName" />
@@ -39,10 +39,12 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { permissionTypes } from "../../utils/permissions.js";
-import stuvolist from "../../components/stuvolist";
+import stuvolist from "@/components/stuvolist.vue";
 import { fApi, checkToken } from "../../apis";
+import { mapIsLoading, useInfoStore } from "@/stores";
+import { mapStores } from "pinia";
 
 export default {
   data: () => ({
@@ -68,33 +70,21 @@ export default {
   components: {
     stuvolist,
   },
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
-    timeToHint: function (a) {
-      let hr = parseInt(a / 60);
-      let mi = parseInt(a % 60);
-      if (hr != 0)
-        if (mi != 0)
-          return hr + " 小时 " + mi + " 分钟";
-        else
-          return hr + " 小时 ";
-      else
-        return mi + "分钟";
-    },
-
-    async classid2name(classid) {
+    async classid2name(classid:number) {
       for (var i = 0; i < this.classes.length; i++)
         if (this.classes[i]["id"] == classid) return this.classes[i]["name"];
     },
 
     async pageload() {
-      await checkToken(this);
+      await checkToken();
 
       this.classes = await fApi.fetchClassList();
 
-      if (this.$store.state.info.permission > permissionTypes.secretary) {
+      if (this.infoStore.permission > permissionTypes.secretary) {
         this.menudisabled = false;
         this.tipText = "点击选择班级";
         if (this.$route.params.classid !== "0") {
@@ -104,11 +94,11 @@ export default {
           this.viewClassName = "点击选择班级";
         }
       } else {
-        this.viewClassId = this.$store.state.info.class
-        this.viewClassName = this.$store.state.info.classname;
+        this.viewClassId = this.infoStore.class
+        this.viewClassName = this.infoStore.classname;
       }
 
-      if(this.viewClassId!=="0")
+      if (this.viewClassId !== "0")
         await this.fetchstulist();
     },
 
@@ -122,18 +112,22 @@ export default {
       }
     },
 
-    rowClick: function (item) {
+    rowClick (item) {
       this.dialog = true;
       this.rowUserId = item.id;
       this.rowUserName = item.name;
     },
 
-    changeclass: function (item) {
+    changeclass (item) {
       this.viewClassId = item.id;
       this.viewClassName = item.name;
       this.fetchstulist();
     },
   },
+  computed: {
+    ...mapIsLoading(),
+    ...mapStores(useInfoStore)
+  }
 };
 </script>
 

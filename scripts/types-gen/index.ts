@@ -1,4 +1,4 @@
-import { Context, Description } from "./types";
+
 import { createUniqueTypeName, tsCommentStr } from "./src/ts/utils";
 
 export interface Type {
@@ -6,6 +6,15 @@ export interface Type {
     ts: (ctx: Context) => string;
     py: (ctx: Context) => string;
 }
+
+export type Description = string;
+
+export interface Context {
+    path:string;
+    param?:string;
+    addBefore: string[];
+}
+
 export type GenFunc = (params: any) => Type;
 
 export function obj(...members: [name: string, type: Type, desc?: Description][]): Type {

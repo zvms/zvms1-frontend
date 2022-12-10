@@ -1,4 +1,5 @@
-import { Type } from "./typeGen";
+import { Type, Description, Context } from "zvms-types-gen";
+export { Type, Description, Context };
 
 export interface Api {
     [partPath: string]: Path;
@@ -11,8 +12,6 @@ export interface Part {
 }
 
 export type PathItem = string;
-
-export type Description = string;
 
 export interface Paths {
     [pathItem: PathItem]: Path;
@@ -45,10 +44,4 @@ export interface Config {
 
 export interface DefaultParams {
     [key: string]: unknown;
-}
-
-export interface Context {
-    path:string;
-    param?:string;
-    addBefore: string[];
 }

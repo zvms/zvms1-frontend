@@ -1,5 +1,5 @@
-import { Part } from "../types";
-import { arr, str, int, obj } from "../typeGen";
+import { Part } from "zvms-api-gen/types";
+import { arr, str, int, obj } from "zvms-types-gen";
 export const notice: Part = {
     desc: "公告相关",
     paths: {

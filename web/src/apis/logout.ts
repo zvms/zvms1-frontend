@@ -18,7 +18,7 @@ export async function logout() {
             throw e;
         }
 
-        useInfoStore().$reset();
+        this.infoStore.$reset();
         useLastseenvolStore().$reset();
 
         applyNavItems();

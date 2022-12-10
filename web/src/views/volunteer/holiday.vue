@@ -89,10 +89,12 @@
   </v-container>
 </template>
 
-<script>
-import { toasts } from "../../utils/dialogs.js";
-import { fApi, checkToken } from "../../apis";
-import { NOTEMPTY } from "../../utils/validation.js";
+<script lang="ts">
+import { toasts } from "@/utils/dialogs.js";
+import { fApi, checkToken } from "@/apis";
+import { NOTEMPTY } from "@/utils/validation.js";
+import { useInfoStore } from "@/stores";
+import { mapStores } from "pinia";
 
 export default {
   data: () => ({
@@ -113,20 +115,20 @@ export default {
     },
     rules: [NOTEMPTY()]
   }),
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
     async pageload() {
-      await checkToken(this);
-      let stulst = await fApi.fetchStudentList(this.$store.state.info.class);
+      await checkToken();
+      let stulst = await fApi.fetchStudentList(this.infoStore.class);
       stulst
         ? (this.stulst = stulst)
         : toasts.error("获取学生列表失败");
       for (let i = 0; i < this.stulst.length; i++)
         this.mp[this.stulst[i].id] = this.stulst[i].name;
     },
-    addToList: function () {
+    addToList () {
       let flg = false;
       if (this.stuNew == "" || this.stuNew == undefined) flg = true;
       for (let i in this.form.stuSelected) {
@@ -142,7 +144,7 @@ export default {
         toasts.error("请不要重复报名");
       this.stuNew = "";
     },
-    delFromList: function (i) {
+    delFromList (i) {
       this.form.stuSelected.splice(i, 1);
     },
     async submit() {
@@ -163,6 +165,9 @@ export default {
       )
     }
   },
+  computed:{
+    ...mapStores(useInfoStore)
+  }
 };
 </script>
 

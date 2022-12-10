@@ -7,7 +7,7 @@
       </v-card-title>
       <v-card-text>
         <v-data-table fixed-header :headers="headers" :items="thoughts" :search="search"
-          :loading="$store.state.isLoading" @click:row="rowClick" loading-text="加载中..." no-data-text="没有数据哦"
+          @click:row="rowClick" loading-text="加载中..." no-data-text="没有数据哦"
           no-results-text="没有结果">
         </v-data-table>
       </v-card-text>
@@ -82,7 +82,7 @@
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" block :disabled="$store.state.isLoading" @click="submit">提交
+          <v-btn color="primary" block @click="submit">提交
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -90,7 +90,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import { toasts } from "../../utils/dialogs.js";
 import { permissionTypes } from "../../utils/permissions";
 import axios from "axios";
@@ -120,12 +120,12 @@ export default {
     opening: false
   }),
 
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
 
   methods: {
-    timeToHint: function (a) {
+    timeToHint (a) {
       let hr = parseInt(a / 60);
       let mi = parseInt(a % 60);
       if (hr != 0)
@@ -138,12 +138,12 @@ export default {
     },
 
     async pageload() {
-      await checkToken(this);
-      this.thoughts = await fApi.fetchNothoughtList(this.$store.state.info.class)
+      await checkToken();
+      this.thoughts = await fApi.fetchNothoughtList(this.infoStore.class)
     },
 
-    granted: function () {
-      return this.$store.state.info.permission < permissionTypes.teacher;
+    granted () {
+      return this.infoStore.permission < permissionTypes.teacher;
     },
 
     rowClick: async function (item) {
@@ -164,7 +164,7 @@ export default {
 
     },
 
-    submit: function () {
+    submit () {
       this.dialog1 = false;
       if (!this.thought) {
         toasts.error("没写感想就想交？在想桃子？");

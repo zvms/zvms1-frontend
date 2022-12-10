@@ -6,9 +6,8 @@
         <v-text-field v-model="search" append-icon="mdi-magnify" label="搜索" single-line hide-details></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table fixed-header :headers="headers" :items="thoughts" :search="search"
-          :loading="$store.state.isLoading" @click:row="rowClick" loading-text="加载中..." no-data-text="没有数据哦"
-          no-results-text="没有结果">
+        <v-data-table fixed-header :headers="headers" :items="thoughts" :search="search" @click:row="rowClick"
+          loading-text="加载中..." no-data-text="没有数据哦" no-results-text="没有结果">
         </v-data-table>
       </v-card-text>
     </v-card>
@@ -83,13 +82,13 @@
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" :disabled="$store.state.isLoading" @click="audit(1)">通过
+          <v-btn color="primary" @click="audit(1)">通过
           </v-btn>
-          <v-btn color="red" :disabled="$store.state.isLoading" @click="audit(2)">拒绝
+          <v-btn color="red" @click="audit(2)">拒绝
           </v-btn>
-          <v-btn color="yellow" :disabled="$store.state.isLoading" @click="audit(3)">打回
+          <v-btn color="yellow" @click="audit(3)">打回
           </v-btn>
-          <v-btn color="primary" :disabled="$store.state.isLoading" @click="dialog1 = false">取消
+          <v-btn color="primary" @click="dialog1 = false">取消
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -97,11 +96,14 @@
   </v-container>
 </template>
 
-<script>
-import { toasts } from "../../utils/dialogs.js";
+<script lang="ts">
+import { toasts, confirm } from "../../utils/dialogs.js";
 import { permissionTypes } from "../../utils/permissions";
 import { validate, validateNotNAN, validateNotLargerThan, validateNotNegative } from "../../utils/validation";
 import { fApi, checkToken } from "../../apis";
+import { mapIsLoading, useInfoStore } from "@/stores";
+import { timeToHint } from "@/utils/calc";
+import { mapStores } from "pinia";
 
 export default {
   data: () => ({
@@ -127,27 +129,16 @@ export default {
 
     pictures: []
   }),
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
-    timeToHint: function (a) {
-      let hr = parseInt(a / 60);
-      let mi = parseInt(a % 60);
-      if (hr != 0)
-        if (mi != 0)
-          return hr + " 小时 " + mi + " 分钟";
-        else
-          return hr + " 小时 ";
-      else
-        return mi + "分钟";
-    },
     async pageload() {
-      await checkToken(this);
+      await checkToken();
       this.thoughts = await fApi.fetchUnauditedVolunteers();
     },
-    granted: function () {
-      return this.$store.state.info.permission < permissionTypes.teacher;
+    granted () {
+      return this.infoStore.permission < permissionTypes.teacher;
     },
     rowClick: async function (item) {
       this.dialog1 = true;
@@ -167,8 +158,8 @@ export default {
       this.volTO = vol.outside;
       this.volTL = vol.large;
     },
-    audit: async function (status) {
-      let value = await dialogs.confirm()
+    async audit(status) {
+      let value = await confirm();
       if (value) {
         this.dialog1 = false;
         if (status == 1) {
@@ -211,6 +202,10 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapIsLoading(),
+    ...mapStores(useInfoStore)
+  }
 };
 </script>
 

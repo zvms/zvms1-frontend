@@ -44,8 +44,8 @@
       <v-card>
         <v-card-title>报名列表</v-card-title>
         <v-card-text>
-          <v-data-table fixed-header :headers="headers" :items="participantsLst" :search="search"
-            :loading="$store.state.isLoading" loading-text="加载中..." no-data-text="没有数据哦" no-results-text="没有结果">
+          <v-data-table fixed-header :headers="headers" :items="participantsLst" :search="search" loading-text="加载中..."
+            no-data-text="没有数据哦" no-results-text="没有结果">
           </v-data-table>
         </v-card-text>
         <v-card-actions>
@@ -135,13 +135,18 @@
   </v-container>
 </template>
 
-<script>
-import { toasts } from "../../utils/dialogs.js";
-import { permissionTypes } from "../../utils/permissions";
-import volinfo from "../../components/volinfo";
-import { fApi, checkToken } from "../../apis";
+<script lang="ts">
+import { toasts } from "@/utils/dialogs.js";
+import { permissionTypes } from "@/utils/permissions";
+import volinfo from "@/components/volinfo.vue";
+import { fApi, checkToken } from "@/apis";
 import axios from "axios";
+import { useInfoStore, useLastseenvolStore } from "@/stores";
+import { mapStores } from "pinia";
 
+interface Volwork{
+  id:number
+}
 
 export default {
   data: () => ({
@@ -150,7 +155,7 @@ export default {
       { text: "学号", value: "stuId", align: "start", sortable: true },
       { text: "姓名", value: "stuName" },
     ],
-    volworks: [],
+    volworks: [] as Volwork[],
     dialog: false,
     dialog_participant: false,
     dialog1: false,
@@ -174,18 +179,18 @@ export default {
   components: {
     volinfo,
   },
-  mounted: function () {
+  mounted () {
     this.pageload();
   },
   methods: {
     async pageload() {
-      await checkToken(this);
-      let volworks = await this.fetchVol();
+      await checkToken();
+      let volworks:Volwork[] = await this.fetchVol();
       this.volworks = volworks.sort((a, b) => b.id - a.id);
-      this.$store.commit("lastSeenVol", this.volworks);
+      this.lastseenvolStore.lastseenvol = this.volworks;
     },
-    granted: function () {
-      return this.$store.state.info.permission < permissionTypes.teacher;
+    granted () {
+      return this.infoStore.permission < permissionTypes.teacher;
     },
     async volSignUp(volid) {
       console.log("SignUp: " + volid);
@@ -193,7 +198,7 @@ export default {
 
       this.stulst = undefined;
       this.stulstSelected = [];
-      let stulst = await fApi.fetchStudentList(this.$store.state.info.class);
+      let stulst = await fApi.fetchStudentList(this.infoStore.class);
       stulst
         ? (this.stulst = stulst)
         : toasts.error("获取学生列表失败");
@@ -201,7 +206,7 @@ export default {
       for (const i in this.stulst)
         this.mp[this.stulst[i].id] = this.stulst[i].name;
     },
-    thoughtSubmitDialog: function (volId) {
+    thoughtSubmitDialog (volId) {
       this.dialog2 = true;
       this.curVolId = volId;
     },
@@ -256,7 +261,7 @@ export default {
     },
     submitThought() {
       this.dialog2 = false;
-      
+
       this.thoughts.forEach((e) => {
         console.log(parseInt(e.stuId), e.stuId)
         axios
@@ -281,15 +286,15 @@ export default {
             toasts.error(err);
           })
           .finally(() => {
-            
+
           });
       })
       this.pictures = []
       this.thoughts = []
       this.curVolId = null
-      
+
     },
-    signupVolunteer: function (volid) {
+    signupVolunteer (volid) {
       if (this.stulstSelected.length == 0) {
         toasts.error("报名列表为空");
         return;
@@ -312,7 +317,7 @@ export default {
           toasts.error(err);
         })
         .finally(() => {
-          
+
         });
       this.dialog1 = false;
     },
@@ -333,7 +338,7 @@ export default {
       else return await this.fetchAllVol();
     },
     async fetchCurrentClassVol() {
-      let volworks = await fApi.fetchClassVolunter(this.$store.state.info.class);
+      let volworks = await fApi.fetchClassVolunter(this.infoStore.class);
       if (!volworks) toasts.error("获取义工列表失败");
       return volworks;
     },
@@ -343,7 +348,7 @@ export default {
       return volworks;
     },
 
-    addToList: function () {
+    addToList () {
       // console.log("Ent");
       // console.log(this.stu_new);
       // console.log(this.stulstSelected);
@@ -361,10 +366,13 @@ export default {
         toasts.error("请不要重复报名");
       this.stu_new = undefined;
     },
-    delFromList: function (i) {
+    delFromList (i) {
       this.stulstSelected.splice(i, 1);
     }
   },
+  computed: {
+    ...mapStores(useLastseenvolStore, useInfoStore)
+  }
 };
 </script>
 
