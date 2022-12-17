@@ -12,12 +12,12 @@ export type UserCatagoryList = UserCatagory[];
 
 export type UserCatagories = {
     raw: UserCatagoriesRaw,
-    byId: UserCatagoriesById,
+    byId:UserCatagoriesById,
     except(...catagory: UserCatagory[]): UserCatagoryList
 };
 
 export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCatagories {
-    let byId: UserCatagoriesById = {};
+    let byId:UserCatagoriesById  ={};
     for (const ir in rawCatagories) {
         const r = rawCatagories[ir]
         byId[r.id] = r;
