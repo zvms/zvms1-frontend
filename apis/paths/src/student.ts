@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, int, str } from "zvms-apis-types-data";
+import { arr, int, str, structs } from "zvms-apis-types-data";
 export const student: Part = {
     desc: "学生相关",
     paths: {
@@ -9,14 +9,7 @@ export const student: Part = {
                 req:{
                 },
                 res: {
-                    rec:arr(obj(
-                        ["volId",int()],
-                        ["name",str()],
-                        ["inside",int()],
-                        ["outside",int()],
-                        ["large",int()],
-                        ["status",int()]
-                    ))
+                    rec:arr(structs.VolunteerRecord)
                 },
                 _res:{
                     "rec": [
