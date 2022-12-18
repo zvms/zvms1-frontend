@@ -1,5 +1,4 @@
-import { Config, Params } from "./types";
-import { randomUUID } from "crypto";
+import { Config, Params } from "./types.js";
 
 export function path2LCamal(path: string) {
     let s = "";

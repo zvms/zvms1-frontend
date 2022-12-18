@@ -1,12 +1,12 @@
-import { Path } from "../types";
-import { tsGet } from "./get";
-import { tsPost } from "./post";
+import { Path } from "../types.js";
+import { tsGet } from "./get.js";
+import { tsPost } from "./post.js";
 
-export function tsPath(path: Path) {
+export function tsPath(path: string, pathData: Path) {
     let str = "";
-    if (path.paths) {
-        for (let itemName in path.paths) {
-            let item = path.paths[itemName];
+    if (pathData.paths) {
+        for (let itemName in pathData.paths) {
+            let item = pathData.paths[itemName];
             let crtPath = path + itemName;
             str +=
                 `${item.desc ? `/**
@@ -15,7 +15,7 @@ export function tsPath(path: Path) {
 ${tsGet(crtPath, item.get)} 
 ${tsPost(crtPath, item.post)}
 `
-            str += tsPath(item);
+            str += tsPath(crtPath, item);
         }
     }
     return str;

@@ -1,6 +1,6 @@
-export * from "./auth"
-export * from "./catagories"
+export * from "./auth.js";
+export * from "./catagories.js";
 
 export const usersIndexRaw =
-    `export * from "./auth.ts";
-export * from "./index.ts";`;
+    `export * from "./auth.ts.js";
+export * from "./index.ts.js";`;

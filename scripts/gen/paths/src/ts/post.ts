@@ -1,5 +1,5 @@
-import { Method } from "../types";
-import { path2LCamal, req2paramsApply, tsReq2paramsDecl, tsResType, tsComments } from "./utils";
+import { Method } from "../types.js";
+import { path2LCamal, req2paramsApply, tsReq2paramsDecl, tsResType, tsComments } from "./utils.js";
 
 export function tsPost(path: string, post?: Method) {
     const crtItemPath = path;

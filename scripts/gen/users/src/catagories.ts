@@ -51,9 +51,11 @@ export const userCatagories = {
 `;
     for (const name in raw) {
         const catagory = raw[name];
-        str += `
-    ${name}
-        `
+        str +=
+            `\t${name}: {
+\t\tid: ${catagory.id},
+\t\tname: "${catagory.name}",
+\t},\n`
     }
     str += `
 }`;

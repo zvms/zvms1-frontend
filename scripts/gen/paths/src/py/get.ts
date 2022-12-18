@@ -1,5 +1,5 @@
-import { Method } from "../types";
-import { path2LCamal, pyReq2paramsDecl, pyResType, pyComments } from "./utils";
+import { Method } from "../types.js";
+import { path2LCamal, pyReq2paramsDecl, pyResType, pyComments } from "./utils.js";
 
 export function pyViewsGet(path: string, get?: Method) {
     const crtItemPath = path;

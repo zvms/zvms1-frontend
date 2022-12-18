@@ -6,7 +6,7 @@ import { catagoriesGenTs, authGenTs, usersIndexRaw } from "zvms-apis-users-gen";
 import { structs as structsData } from "zvms-apis-types-data";
 import { structsDefGenTs, typesIndexRaw } from "zvms-apis-types-gen";
 
-import * as fs from "./fs";
+import * as fs from "./fs.js";
 
 import { resolve } from "node:path";
 import { format } from "prettier";
@@ -66,7 +66,7 @@ function prepare() {
         [paths.b.types, "b-types"]
     ];
     for (const item of backupList) {
-        fs.cpSync(item[0], resolve(backupPath, item[1]));
+        fs.cpSync(item[0], resolve(backupPath, item[1]), { recursive: true });
     }
 }
 

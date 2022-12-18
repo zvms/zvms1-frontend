@@ -1,4 +1,4 @@
-import { Type, Description } from "./types"
+import { Type, Description } from "./types.js";
 
 export function arr(type: Type, desc?: Description): Type {
     return {

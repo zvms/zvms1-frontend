@@ -1,4 +1,4 @@
-import { Type } from "./types";
+import { Type } from "./types.js";
 
 export type StructRaw = Record<string, Type>;
 

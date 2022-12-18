@@ -1,7 +1,7 @@
-import { Method, Params } from "../types";
-import { cfg2str, paramName } from "../commonUtils";
+import { Method, Params } from "../types.js";
+import { cfg2str, paramName } from "../commonUtils.js";
 
-export * from "../commonUtils";
+export * from "../commonUtils.js";
 
 export function pyReq2paramsDecl(req?: Params): string {
     if (!req) return "";

@@ -1,14 +1,14 @@
-import { Part, ImplFiles } from "../types";
-import { pyViewsPath, pyImplsPath } from "./path";
+import { Part, ImplFiles } from "../types.js";
+import { pyViewsPath, pyImplsPath } from "./path.js";
 
 const pyViewsAddBeforeFile = `
 import typing
 `;
 const pyViewsAddAfterFile = "";
 
-export function genViewsPy(part: Part): string {
+export function genViewsPy(name: string, part: Part): string {
     let str = pyViewsAddBeforeFile;
-    str += pyViewsPath(part);
+    str += pyViewsPath(name, part);
     str += pyViewsAddAfterFile;
     return str;
 }
@@ -18,9 +18,9 @@ import typing
 `;
 const pyImplsAddAfterFile = "";
 
-export function genImplsPy(part: Part,implFiles:ImplFiles): string {
+export function genImplsPy(name: string, part: Part, implFiles: ImplFiles): string {
     let str = pyImplsAddBeforeFile;
-    str += pyImplsPath(part);
+    str += pyImplsPath(name, part);
     str += pyImplsAddAfterFile;
     return str;
 }

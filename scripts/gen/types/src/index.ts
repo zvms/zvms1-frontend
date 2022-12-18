@@ -1,3 +1,3 @@
-export * from "./common";
-export * from "./structs";
-export * from "./types";
+export * from "./common.js";
+export * from "./structs.js";
+export * from "./types.js";

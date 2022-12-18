@@ -1,4 +1,4 @@
-import { userCatagories } from "./catagories";
+import { userCatagories } from "./catagories.js";
 import { AuthData } from "zvms-apis-users-gen";
 
 const {

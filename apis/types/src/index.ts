@@ -1,3 +1,3 @@
 export * from "zvms-apis-types-gen";
 
-export * from "./structs";
+export * from "./structs.js";

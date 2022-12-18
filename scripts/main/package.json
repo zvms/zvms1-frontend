@@ -4,9 +4,10 @@
   "description": "",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
-  "module": "true",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gen":"tsc -b && node ./dist/src/index.js"
   },
   "keywords": [],
   "author": "",

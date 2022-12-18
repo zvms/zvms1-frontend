@@ -1,9 +1,9 @@
-export {class2 as class} from "./class";
-export {notice} from "./notice";
-export {report} from "./report";
-export {student} from "./student";
-export {user} from "./user";
-export {volunteer} from "./volunteer";
+export {class2 as class} from "./class.js";
+export {notice} from "./notice.js";
+export {report} from "./report.js";
+export {student} from "./student.js";
+export {user} from "./user.js";
+export {volunteer} from "./volunteer.js";
 
 /*
 int bool 需要加
