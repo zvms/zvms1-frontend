@@ -1,6 +1,5 @@
-from zvms import app
 from zvms.routelib import *
-import zvms.impl.users
+import zvms.impls.users
 
 route(
     rule='/users/login',
