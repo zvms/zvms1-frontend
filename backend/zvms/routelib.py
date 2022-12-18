@@ -3,13 +3,10 @@ from itsdangerous import JSONWebSignatureSerializer, BadSignature
 from functools import wraps
 import json
 
-from tokenlib import read_token
-from zvms import app
-from backend.zvms.res import AUTH
-from backend.zvms.util import ZvmsError, ZvmsSuccess
-
-def route(*,rule, methods='GET', impl_func, params:int, auth):
-    app.add_url_rule(rule, methods=[methods], view_func=deco(impl_func, params, auth))
+from zvms import app, db
+from zvms.res import AUTH
+from zvms.util import ZvmsError, ZvmsSuccess, debug_mode
+import zvms.tokenlib as tk
 
 class Named:
     def __init__(self, raw, name):
@@ -88,17 +85,19 @@ class Group:
         return '(' + ' & '.join(map(str, self.options)) + ')'
 
 def parse(json):
-    def foo(bar):
-        return lambda: bar
     return {
-        int: foo('number(int)'),
-        float: foo('number(float)'),
-        bool: foo('boolean'),
-        type(None): foo('null'),
-        str: foo('string'),
+        int: lambda: 'number(int)',
+        float: lambda: 'number(float)',
+        bool: lambda: 'boolean',
+        type(None): lambda: 'null',
+        str: lambda: 'string',
         list: lambda: '[ ' + ', '.join(map(parse, json)) + ' ]',
         dict: lambda: '{ ' + ', '.join(map(lambda p: f'"{p[0]}": {parse(p[1])}', json), json.items()) + ' }'
     }.get(type(json))
+
+
+def route(*,rule, method='GET', impl_func, params=Any, auth=0xffff):
+    app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
 
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
 # 在所有函数名前面加上@Deco()
@@ -111,26 +110,35 @@ def deco(impl, params, auth):
         except:
             json_data = {}
             
+        token_data = {}
         if auth != None:
             try:
-                token_data = read_token(request.headers.get('AUTHORIZATION'))
-                if not (token_data['auth'] & auth) and auth != AUTH_SYSTEM:
+                token_data = tk.read(request.headers.get('Authorization'))
+                if not tk.exists(token_data):
+                    return json.dumps({'type':'ERROR', 'message':"Token失效, 请重新登陆"})
+                if not (token_data['auth'] & auth) and auth != AUTH.SYSTEM:
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'})
-            except:
-                token_data = {}
-                return json.dumps({'type':'ERROR', 'message':"未获取到Token, 请重新登陆"})
+            except Exception as ex:
+                return json.dumps({'type': 'ERROR', 'message': str(token_data)})
+            # except:
+            #     return json.dumps({'type':'ERROR', 'message':"未获取到Token, 请重新登陆"})
 
         if not params(json_data):
+            print(str(params))
+            print(parse(json_data))
+            print(json_data)
             return json.dumps({'type': 'ERROR', 'message': '请求接口错误',
                 'expected': str(params), 'found': parse(json_data)})
 
         try:
-            impl(*args, **kwargs, json_data=json_data, token_data=token_data)
+            impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return json.dumps({'type': 'ERROR', 'message': ex.message})
         except ZvmsSuccess as ex:
             r = {'type': 'SUCCESS', 'message': ex.message}
             if ex.result:
                 r['result'] = ex.result
+            if request.method != 'GET' and not debug_mode():
+                db.session.commit()
             return json.dumps(r)
     return wrapper

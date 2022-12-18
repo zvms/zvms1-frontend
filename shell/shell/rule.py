@@ -28,9 +28,10 @@ class Rule:
     def help(self):
         for elem in self.__elems:
             print(elem.name, end=' ')
-        print('\n可选的参数')
-        for option in self.__options.values():
-            option.help()
+        if self.__options:
+            print('\n可选的参数')
+            for option in self.__options.values():
+                option.help()
         print()
 
     def interpret(self, cmd):

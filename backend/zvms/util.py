@@ -32,13 +32,10 @@ def select(self, *cols, **aliases):
 def update(self, **kwargs):
     for k, v in kwargs.items():
         self.__setattr__(k, v)
-    if not no_commit:
-        db.session.commit()
 
 def insert(self):
     db.session.add(self)
-    if not no_commit:
-        db.session.commit()
+    db.session.flush()
     return self
 
 def __init__(self, **kwargs):

@@ -2,15 +2,12 @@ from urllib.request import urlopen, Request
 import json
 
 headers = {}
-ip = 'http://172.31.2.3:5000'
+ip = 'http://172.31.2.3:1145'
 
-def _foo(url, args=None):
-    request = Request(url, headers)
-    if args == None:
-        response = urlopen(request)
-    else:
-        response = urlopen(request, args)
-    response = json.loads(response)
+def _foo(url, method, args):
+    request = Request(url=url, headers=headers, method=method)
+    response = urlopen(request, json.dumps(args).encode())
+    response = json.loads(response.read())
     print(response['message'])
     if response['type'] == 'SUCCESS':
         return response.get('result')
@@ -20,7 +17,7 @@ def _foo(url, args=None):
     return None
 
 def get(url):
-    return _foo(ip + url)
+    return _foo(ip + url, 'GET', {})
 
 def post(url, **args):
-    return _foo(ip + url, args)
+    return _foo(ip + url, 'POST', args)
