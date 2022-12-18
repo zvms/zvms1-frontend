@@ -5,11 +5,12 @@ const {
     none,
     student
 } = userCatagories.raw;
+
 const {
     except
 } = userCatagories
 
-export const auth: AuthData = {
+export const authData: AuthData = {
     mePageOnNav: except(none),
-    abc:[student]
+    abc: [student]
 }   

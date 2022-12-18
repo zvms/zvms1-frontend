@@ -2,7 +2,7 @@ import { Type, Description } from "zvms-apis-types-gen";
 export { Type, Description };
 
 export interface Apis {
-    [partPath: string]: Path;
+    [partPath: string]: Part;
 }
 
 export interface Part {
@@ -45,3 +45,5 @@ export interface Config {
 export interface DefaultParams {
     [key: string]: unknown;
 }
+
+export type ImplFiles = Record<string, string>;

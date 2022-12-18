@@ -1,27 +1,26 @@
-import { Apis } from "../types";
-import { pyPath } from "./path";
+import { Part, ImplFiles } from "../types";
+import { pyViewsPath, pyImplsPath } from "./path";
 
-const pyAddBeforeFile = `
+const pyViewsAddBeforeFile = `
 import typing
 `;
-const pyAddAfterFile = "";
+const pyViewsAddAfterFile = "";
 
-export function genPy(data: Apis): Record<keyof typeof data, string> {
-    let result: Record<keyof typeof data, string> = {};
-    for (const partName in data) {
-        const part = (data as Apis)[partName];
+export function genViewsPy(part: Part): string {
+    let str = pyViewsAddBeforeFile;
+    str += pyViewsPath(part);
+    str += pyViewsAddAfterFile;
+    return str;
+}
 
-        let str = pyAddBeforeFile;
-        str += pyPath(part);
-        str += pyAddAfterFile;
-        // try {
-        //     str = format(str, { parser: "typescript" });
-        // } catch (e: any) {
-        //     console.error(e.message);
-        // }
-        //---//writeFileSync(`./gen/py/${partName}.pyi`, str);
-        //---//console.log(`[PY] [${partName}] generated -> ./gen/py/${partName}.pyi`);
-        result[partName] = str;
-    }
-    return result;
+const pyImplsAddBeforeFile = `
+import typing
+`;
+const pyImplsAddAfterFile = "";
+
+export function genImplsPy(part: Part,implFiles:ImplFiles): string {
+    let str = pyImplsAddBeforeFile;
+    str += pyImplsPath(part);
+    str += pyImplsAddAfterFile;
+    return str;
 }

@@ -1,23 +1,23 @@
+import { genImplsPy, genViewsPy } from "./py/gen";
+import { genTs } from "./ts/gen";
+import { ImplFiles, Apis } from "./types";
+
 export * from "./types"
-export { genPy } from "./py/gen";
+export * from "./rawCodes"
+export { genViewsPy, genImplsPy } from "./py/gen";
 export { genTs } from "./ts/gen";
 
-// import { Apis } from "./types";
-// import { mkdirSync, rmSync, writeFileSync } from "fs";
-// import { tsPath } from "./ts/path";
-// import { pyPath } from "./py/path";
-// import { format } from "prettier"
-
-// main();
-
-// function main() {
-//     mkdirSync("./gen", { recursive: true });
-//     rmSync("./gen", { recursive: true });
-//     mkdirSync("./gen", { recursive: false });
-//     mkdirSync("./gen/ts", { recursive: true });
-//     rmSync("./gen/ts", { recursive: true });
-//     mkdirSync("./gen/ts", { recursive: false });
-//     mkdirSync("./gen/py", { recursive: true });
-//     rmSync("./gen/py", { recursive: true });
-//     mkdirSync("./gen/py", { recursive: false });
-// }
+export type PathsGenerated = { name: string, fApi: string, views: string, impls: string }[];
+export function pathsGen(apis: Apis, implFiles: ImplFiles): PathsGenerated {
+    const result: PathsGenerated = [];
+    for (const partName in apis) {
+        const part = (apis)[partName];
+        result.push({
+            name: partName,
+            fApi: genTs(part),
+            views: genViewsPy(part),
+            impls: genImplsPy(part, implFiles)
+        })
+    }
+    return result;
+}

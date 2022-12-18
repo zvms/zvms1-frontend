@@ -44,3 +44,18 @@ export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCata
         }
     }
 }
+
+export function catagoriesGenTs({ raw }: UserCatagories) {
+    let str = `
+export const userCatagories = {
+`;
+    for (const name in raw) {
+        const catagory = raw[name];
+        str += `
+    ${name}
+        `
+    }
+    str += `
+}`;
+    return str;
+}

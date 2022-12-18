@@ -4,42 +4,35 @@ export type StructRaw = Record<string, Type>;
 
 export type StructsRaw = Record<string, StructRaw>;
 
-export type Structs<Raw> = Record<keyof Raw, Type>;
+export type Structs<Raw> = Record<keyof Raw, Type & { tsDef: string, pyDef: string }>;
 
-export function genStructs(raw: Structs<any>): {
-    py: string,
-    ts: string
-} {
-    let ts = "";
-    let py = "";
-    for (const name in raw) {
-        const struct = raw[name];
-        ts += struct.ts;
-        py += struct.py;
+export function structsDefGenTs(data: Structs<any>): string {
+    let str = ``;
+    for (const name in data) {
+        const struct = data[name];
+        str += struct.tsDef;
     }
-    return {
-        ts,
-        py
-    }
+    return str
 }
 
 export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
     let result: Structs<Raw> = {} as any;
     for (const name in raw) {
         const struct = raw[name];
-        let ts = `export interface ${name}{\n`;
-        let py = `${name} = TypedDict('${name}',{`;
+        let tsDef = `export interface ${name}{\n`;
+        let pyDef = `${name} = TypedDict('${name}',{`;
         for (const key in struct) {
             const type = struct[key];
-            ts += `\t${key}:${type.ts};\n`;
-            py += `\t'${key}':${type.py},\n`;
+            tsDef += `\t${key}:${type.ts};\n`;
+            pyDef += `\t'${key}':${type.py},\n`;
         }
-        ts += "}\n";
-        py += "})\n";
+        tsDef += "}\n";
+        pyDef += "})\n";
         result[name] = {
-            ts,
-            py,
-
+            tsDef: tsDef,
+            pyDef: pyDef,
+            ts: `structs.${name}`,
+            py: `structs.${name}`,
         }
     }
     return result;

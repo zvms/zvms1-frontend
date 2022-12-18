@@ -9,10 +9,10 @@ export const class2: Part = {
                 req:{
                 },
                 res: {
-                    class:arr(obj(
-                        ["id",int()],
-                        ["name",str()]
-                    ))
+                    // class:arr(obj(
+                    //     ["id",int()],
+                    //     ["name",str()]
+                    // ))
                 },
                 _res:{
                     class:[
@@ -31,13 +31,13 @@ export const class2: Part = {
                 req:{
                 },
                 res: {
-                    student:arr(obj(
-                        ["id",int()],
-                        ["name",str()],
-                        ["inside",int()],
-                        ["outside",int()],
-                        ["large",int()]
-                    ))
+                    // student:arr(obj(
+                    //     ["id",int()],
+                    //     ["name",str()],
+                    //     ["inside",int()],
+                    //     ["outside",int()],
+                    //     ["large",int()]
+                    // ))
                 },
                 _res:{
                     student:[
@@ -56,15 +56,15 @@ export const class2: Part = {
                 req:{
                 },
                 res: {
-                    volunteer:arr(obj(
-                        ["id",int()],
-                        ["name",str()],
-                        ["date",str()],
-                        ["time",str()],
-                        ["description",str()],
-                        ["status",int()],
-                        ["stuMax",int()]
-                    ))
+                    // volunteer:arr(obj(
+                    //     ["id",int()],
+                    //     ["name",str()],
+                    //     ["date",str()],
+                    //     ["time",str()],
+                    //     ["description",str()],
+                    //     ["status",int()],
+                    //     ["stuMax",int()]
+                    // ))
                 },
                 _res:{
                     volunteer: [
@@ -82,10 +82,10 @@ export const class2: Part = {
                 req:{                    
                 },
                 res:{
-                    result:arr(obj(
-                        ["volId",int()],
-                        ["stuId",int()]
-                    ))
+                    // result:arr(obj(
+                    //     ["volId",int()],
+                    //     ["stuId",int()]
+                    // ))
                 },
                 _res:{
                     result:[

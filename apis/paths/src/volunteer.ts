@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, str, int, bool} from "zvms-apis-types-data";
+import { arr, str, int, bool, structs} from "zvms-apis-types-data";
 export const volunteer: Part = {
     desc: "义工活动相关",
     paths: {
@@ -9,15 +9,15 @@ export const volunteer: Part = {
                 req:{
                 },
                 res: {
-                    volunteer:arr(obj(
-                        ["id",int()],
-                        ["name",str()],
-                        ["description",str()],
-                        ["date",str()],
-                        ["time",str()],
-                        ["status",int()],
-                        ["stuMax",int()]
-                    ))
+                    // volunteer:arr(obj(
+                    //     ["id",int()],
+                    //     ["name",str()],
+                    //     ["description",str()],
+                    //     ["date",str()],
+                    //     ["time",str()],
+                    //     ["status",int()],
+                    //     ["stuMax",int()]
+                    // ))
                 },
                 _res:{
                     "volunteer": [
@@ -90,11 +90,11 @@ export const volunteer: Part = {
                     inside:int(),
                     outside:int(),
                     large:int(),
-                    class:arr(obj(
-                        ["id",int()],
-                        ["stuMax",int()],
-                        ["visible",bool()]
-                    ))
+                    // class:arr(obj(
+                    //     ["id",int()],
+                    //     ["stuMax",int()],
+                    //     ["visible",bool()]
+                    // ))
                 },
                 res: {
                 },
@@ -122,10 +122,10 @@ export const volunteer: Part = {
                 req:{        
                 },
                 res: {
-                    result:arr(obj(
-                        ["stuId",int()],
-                        ["stuName",str()]
-                    ))
+                    // result:arr(obj(
+                    //     ["stuId",int()],
+                    //     ["stuName",str()]
+                    // ))
                 },
                 _res:{
                     "result": [
@@ -140,10 +140,10 @@ export const volunteer: Part = {
             post: {
                 desc: "义工活动感想提交",
                 req:{
-                    thought:arr(obj(
-                        ["stuId",int()],
-                        ["content",str()]
-                    ))
+                    // thought:arr(obj(
+                    //     ["stuId",int()],
+                    //     ["content",str()]
+                    // ))
                 },
                 res: {
                 },
@@ -179,13 +179,7 @@ export const volunteer: Part = {
             post: {
                 desc: "感想审核",
                 req:{
-                    thought:arr(obj(
-                        ["stuId",int()],
-                        ["status",int()],
-                        ["inside",int()],
-                        ["outside",int()],
-                        ["large",int()]
-                    ))
+                    thought:arr(structs.VolunteerRecord)
                 },
                 res: {
                 },
@@ -204,11 +198,11 @@ export const volunteer: Part = {
                 req:{   
                 },
                 res: {
-                    result:arr(obj(
-                        ["volId",int()],
-                        ["stuId",int()],
-                        ["thought",str()]
-                    ))
+                    // result:arr(obj(
+                    //     ["volId",int()],
+                    //     ["stuId",int()],
+                    //     ["thought",str()]
+                    // ))
                 },
                 cfg:{
                     token:false
